@@ -53,7 +53,9 @@
 	<p>Chris's goals are to be able to get the things she needs when she is stationed across seas. Her other goal is to be able to meet new people.</p>
 </div>
 <h1>User Story</h1>
+<div>
 <p>As a user, I want to be able to get the things I need and be able to talk to new people.</p>
+</div>
 <h1>Use Case Interaction Flow</h1>
 <div>
 	<ul>
