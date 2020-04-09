@@ -43,7 +43,11 @@
 	</div>
 	<div>
 	<h2>Technology:</h2>
-		<p>Owns a Lenovo IdeaPad FLEX-14IWL Laptop. His phone is a Google Pixel 3a. Have Unlimited data and Hotspot acess, as well as home internet connection.</p>
+		<p>Owns a Lenovo IdeaPad FLEX-14IWL Laptop. His phone is a Google Pixel 3a. Have Unlimited data and Hot spot access, as well as home internet connection.</p>
+	</div>
+	<div>
+		<h2>Goal:</h2>
+			<p>To help soldiers who are deployed overseas by sending them a box of comforts from home and necessities to show his thanks and support.</p>
 	</div>
 	<h2>User Story</h2>
 	<p>As a user, I want to help other people any way that I can.</p>
