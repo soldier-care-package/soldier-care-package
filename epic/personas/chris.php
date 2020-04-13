@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Christina "Chris" Rodriguez</h1>
-<img src="alonso.jpg" alt="picture of chris">
+<img src="../images/alonso.jpg" alt="picture of chris">
 <h2>Demographic</h2>
 <div>
 	<ul>
