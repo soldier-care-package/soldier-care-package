@@ -6,7 +6,7 @@
 	</head>
 	<body>
 	<div>
-	<img src="lilly.jpg" alt="Profile picture of Lilly."
+	<img src="../images/lilly.jpg" alt="Profile picture of Lilly."
 	</div>
 	<h1>Lilly Poblano</h1>
 		<p>Age: 23</p>

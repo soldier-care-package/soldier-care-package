@@ -6,7 +6,7 @@
 	</head>
 	<body>
 	<h1>Charlie Miller</h1>
-	<img src="charlie.jpg" alt="profile picture of Charlie">
+	<img src="../images/charlie.jpg" alt="profile picture of Charlie">
 	<h2>Demographic</h2>
 	<div>
 		<ul>
