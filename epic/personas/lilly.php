@@ -26,8 +26,8 @@
 		She has limited access to a computer with internet. Is able to use a computer on base.</p>
 
 	<h2>Technology:</h2>
-		<p>She has a cell-phone which is a iphone 6s that has the sim card changed, but she can only use this when she is not out on a mission, or on duty. The
-		Computers on base are Dell Inspiron 22 3000 All-in-One with Windows 10 Home.</p>
+		<p>She has a cell-phone which is a iphone 6s with safari browser that has the sim card changed, but she can only use this when she is not out on a mission, or on duty. The
+		Computers on base are Dell Inspiron 22 3000 All-in-One with Windows 10 Home. They all have Google Chrome as their main browser.</p>
 
 	<h2>Goals:</h2>
 		<p>Lilly is needs to find another way to get supplies. She would like to find a way to get exactly what she needs.</p>
