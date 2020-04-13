@@ -36,10 +36,10 @@
 		<p>Precondition: Lilly has set up an account at soldier-care-package.com</p>
 		<ul>
 			<li>Lilly logs into her account.</li>
-			<li>The Application opens up to the Home screen.</li>
+			<li>The Application opens up to the Profile screen.</li>
 			<li>Lilly clicks the request box button.</li>
-			<li>The website brings up a form page, that has box size options up top and text box that you can enter items or put url links of the items. </li>
-			<li>She picks small box button. Then fills the text box with list: Twizzler Red Licorice, book: The Te of Piglet by Benjamin Hoff, deck of cards, a url link to stationary: https://www.amazon.com/Dickies-Multi-Pack-Dri-Tech-Moisture-Control/dp/B0757RXZJH/ref=sr_1_5?dchild=1&keywords=military%2Bsocks&qid=1586295200&sr=8-5&th=1&psc=1 (12.99),
+			<li>The website brings up a form page, that has text box that you can enter items or put url links of the items. </li>
+			<li> She fills the text box with list: Twizzler Red Licorice, book: The Te of Piglet by Benjamin Hoff, deck of cards, a url link to stationary: https://www.amazon.com/Dickies-Multi-Pack-Dri-Tech-Moisture-Control/dp/B0757RXZJH/ref=sr_1_5?dchild=1&keywords=military%2Bsocks&qid=1586295200&sr=8-5&th=1&psc=1 (12.99),
 				and url link to pens: https://www.amazon.com/Pilot-Retractable-Premium-Roller-31078/dp/B0058NN4C0/ref=sr_1_2_sspa?dchild=1&keywords=g2+pens&qid=1586295543&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFYSEgyME9NVFM3TVcmZW5jcnlwdGVkSWQ9QTA5MDcyNzAxSEVBQTVSVkQxU1ZHJmVuY3J5cHRlZEFkSWQ9QTA1MjUxNjQyWVhVQjc3RTZPRUlEJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ== (6.77).
 			Then she presses the confirm button.</li>
 			<li> The website will show a page that shows the soldiers current address listed with list underneath. There will be a change address button next to the address text, if address is not correct. Also a edit list button next to list if there needs to be any changes.

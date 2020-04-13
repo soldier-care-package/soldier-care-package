@@ -57,12 +57,12 @@
 			<ul>
 			<li>Charlie logs into his account.</li>
 			<li>The Application opens up to the Home screen.</li>
-			<li>Charlie clicks on boxes button.</li>
+			<li>Charlie clicks on list button.</li>
 			<li>Web page brings up list of boxes that have been requested.</li>
-			<li>He Adds filter to list "medium box".</li>
-			<li>Web site shows only the list for medium boxes.</li>
-			<li>Charlie Looks at all the lists and finds one that he can fulfill. Clicks on accept box.</li>
-			<li>Web page brings sender to home page where the list is under "In Progress". Has options to print list or email it.</li>
+			<li>He Adds filter to list "Army".</li>
+			<li>Web site shows only the list for Army.</li>
+			<li>Charlie Looks at all the lists and finds one that he can fulfill. He can select individual items or whole list. But Clicks on accept whole list.</li>
+			<li>Web page brings sender to Profile page where the list is under "In Progress". Has options to print list or email it.</li>
 			<li>Charlie decides to view the website from his mobile phone to remember products that he has to purchase while he is at store. He gathers
 				all the products and mails box. He logs in to home page and updates status of box to mailed.</li>
 			<li> Web brings up option to type in tracking number in text box.</li>
