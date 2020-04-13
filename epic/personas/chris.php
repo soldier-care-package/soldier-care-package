@@ -46,7 +46,7 @@
 </div>
 <h2>Technology</h2>
 <div>
-	<p>Chris has a Surface laptop 2 that she uses to get into contact with her family.</p>
+	<p>Chris has a Surface laptop 2 that she uses to watch shows and movies in her free time, she also uses her laptop to video call her family.</p>
 </div>
 <h2>Goals</h2>
 <div>
