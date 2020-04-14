@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Conceptual Model</title>
+</head>
+<body>
+	<h1>Conceptual Model</h1>
+</body>
+<body>
+	<h2>Profile</h2>
+		<div>
+			<ul>
+				<li>profileId (Primary Key)</li>
+				<li>profileActivationToken</li>
+				<li>profileAddress</li>
+				<li>profileAvatarUrl</li>
+				<li>profileEmail</li>
+				<li>profileHash</li>
+				<li>profileType</li>
+				<li>profileUsername</li>
+			</ul>
+		</div>
+	<h2>Delivery</h2>
+		<div>
+			<ul>
+				<li>deliveryId (Primary Key)</li>
+				<li>deliveryDate</li>
+				<li>deliveryStatus (promised and shipped)</li>
+				<li>deliveryTrackNumber</li>
+				<li>deliveryService</li>
+			</ul>
+		</div>
+	<h2>Request</h2>
+		<div>
+			<ul>
+				<li>requestId (Primary Key)</li>
+				<li>requestContent</li>
+				<li>requestDate</li>
+				<li>requestProfileId (Foreign Key)</li>
+			</ul>
+		</div>
+	<h2>Item</h2>
+		<div>
+			<ul>
+				<li>itemId (Primary Key)</li>
+				<li>itemDate</li>
+				<li>itemProfileId (Foreign Key)</li>
+				<li>itemRequestId (Foreign Key)</li>
+			</ul>
+		</div>
+		<div>
+			<ul>
+				<li>One profile can make many request</li>
+				<li>One request can have many items</li>
+				<li>One profile can accept many items</li>
+			</ul>
+		</div>
+</body>
+</html>
