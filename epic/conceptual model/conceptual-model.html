@@ -15,6 +15,7 @@
 				<li>profileActivationToken</li>
 				<li>profileAddress</li>
 				<li>profileAvatarUrl</li>
+				<li>profileBio</li>
 				<li>profileEmail</li>
 				<li>profileHash</li>
 				<li>profileType</li>
@@ -24,11 +25,12 @@
 	<h2>Delivery</h2>
 		<div>
 			<ul>
-				<li>deliveryId (Primary Key)</li>
-				<li>deliveryDate</li>
-				<li>deliveryStatus (promised and shipped)</li>
-				<li>deliveryTrackNumber</li>
-				<li>deliveryService</li>
+				<li>packageId (Primary Key)</li>
+				<li>packageDate</li>
+				<li>packageProfileId (Foreign Key)</li>
+				<li>packageService</li>
+				<li>packageStatus (promised and shipped)</li>
+				<li>packageTrackNumber</li>
 			</ul>
 		</div>
 	<h2>Request</h2>
@@ -45,15 +47,17 @@
 			<ul>
 				<li>itemId (Primary Key)</li>
 				<li>itemDate</li>
-				<li>itemProfileId (Foreign Key)</li>
+				<li>itemPackageId (Foreign Key)</li>
 				<li>itemRequestId (Foreign Key)</li>
+				<li>itemUrl</li>
 			</ul>
 		</div>
 		<div>
 			<ul>
 				<li>One profile can make many request</li>
+				<li>One profile can have many packages</li>
 				<li>One request can have many items</li>
-				<li>One profile can accept many items</li>
+				<li>One package can have many items</li>
 			</ul>
 		</div>
 </body>
