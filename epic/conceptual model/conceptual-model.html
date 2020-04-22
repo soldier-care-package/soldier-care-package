@@ -16,48 +16,50 @@
 				<li>profileAddress</li>
 				<li>profileAvatarUrl</li>
 				<li>profileBio</li>
+				<li>profileCity</li>
 				<li>profileEmail</li>
 				<li>profileHash</li>
+				<li>profileName</li>
+				<li>profileRank</li>
+				<li>profileState</li>
 				<li>profileType</li>
 				<li>profileUsername</li>
+				<li>profileZip</li>
 			</ul>
 		</div>
-	<h2>Delivery</h2>
+	<h2>Donation</h2>
 		<div>
 			<ul>
-				<li>packageId (Primary Key)</li>
-				<li>packageDate</li>
-				<li>packageProfileId (Foreign Key)</li>
-				<li>packageService</li>
-				<li>packageStatus (promised and shipped)</li>
-				<li>packageTrackNumber</li>
+				<li>donationId (Primary Key)</li>
+				<li>donationProfileId (Foreign Key)</li>
+				<li>donationDate</li>
 			</ul>
 		</div>
 	<h2>Request</h2>
 		<div>
 			<ul>
 				<li>requestId (Primary Key)</li>
+				<li>requestProfileId (Foreign Key)</li>
 				<li>requestContent</li>
 				<li>requestDate</li>
-				<li>requestProfileId (Foreign Key)</li>
 			</ul>
 		</div>
 	<h2>Item</h2>
 		<div>
 			<ul>
 				<li>itemId (Primary Key)</li>
-				<li>itemDate</li>
-				<li>itemPackageId (Foreign Key)</li>
+				<li>itemDonationId (Foreign Key)</li>
 				<li>itemRequestId (Foreign Key)</li>
+				<li>itemTrackingNumber</li>
 				<li>itemUrl</li>
 			</ul>
 		</div>
 		<div>
 			<ul>
 				<li>One profile can make many request</li>
-				<li>One profile can have many packages</li>
+				<li>One profile can have many donations</li>
 				<li>One request can have many items</li>
-				<li>One package can have many items</li>
+				<li>One donation can have many items</li>
 			</ul>
 		</div>
 </body>
