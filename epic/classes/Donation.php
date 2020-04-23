@@ -72,4 +72,19 @@ class Donation implements \JsonSerializable {
 	 * @throws \RangeException if $newDonationId is not positive
 	 * @throws \TypeError if $newDonationId is not a uuid or string
 	 **/
+	public function setDonationId( $newDonationId) : void {
+		try {
+			$uuid = self::validateUuid($newDonationId);
+		}catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		//convert and store the profile id
+		$this->DonationId = $uuid;
+
+	}
+	/**
+	 * accessor method for tweet content
+	 * @return string value of tweet
+	 */
 }
