@@ -193,5 +193,42 @@ class Donation implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * deletes this Donation from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+
+		//create query template
+		$query = "DELETE FROM donation WHERE donationId = :donationId";
+
+		//prepare a statement object using the SQL so pdo knows what to do.
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holder in the template
+		$parameters = ["donationId" => $this->donationId->getBytes()];
+
+		//now execute the statement on the database.
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 */
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["donationId"] = $this->donationId->toString();
+		unset($fields["donationProfileId"]);
+
+		//format the date so that the front end can consume it
+		$fields["donationDate"] = round(floatval($this->donationDate->format("U.u")) * 1000);
+		return($fields);
+	}
 
 }
