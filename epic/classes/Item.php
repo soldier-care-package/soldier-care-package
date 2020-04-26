@@ -269,8 +269,41 @@ class Item implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * deletes this item from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError is $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
 
+		//create query template
+		$query = "DELETE FROM item WHERE itemId = :itemId";
 
+		//prepare a statement object using the SQL so pdo knows what to do.
+		$statement = $pdo->prepare($query);
 
+		//bind the member variables to the place holder in the template
+		$parameters = ["itemId" => $this->itemId->getBytes()];
 
+		//now execute the statement on the database.
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 */
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["itemId"] = $this->itemId->toString();
+		$fields["itemDonationId"] = $this->itemDonationId->toString();
+		$fields["itemRequestId"] = $this->itemRequestId->toString();
+		unset($fields["itemTrackingNumber"]);
+		unset($fields["itemUrl"]);
+		return($fields);
+	}
 }
