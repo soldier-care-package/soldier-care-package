@@ -79,7 +79,7 @@ class Donation implements \JsonSerializable {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		//convert and store the profile id
+		//convert and store the request id
 		$this->DonationId = $uuid;
 
 	}

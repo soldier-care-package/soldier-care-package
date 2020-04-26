@@ -78,21 +78,21 @@ class Request implements \JsonSerializable {
 	}
 
 	/**
-	 * mutator method for donation id
+	 * mutator method for request id
 	 *
-	 * @param Uuid|string $newDonationId new value of donation id
-	 * @throws \RangeException if $newDonationId is not positive
-	 * @throws \TypeError if $newDonationId is not a uuid or string
+	 * @param Uuid|string $newRequestId new value of request id
+	 * @throws \RangeException if $newRequestId is not positive
+	 * @throws \TypeError if $newRequestId is not a uuid or string
 	 **/
-	public function setDonationId( $newDonationId) : void {
+	public function setRequestId( $newRequestId) : void {
 		try {
-			$uuid = self::validateUuid($newDonationId);
+			$uuid = self::validateUuid($newRequestId);
 		}catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		//convert and store the profile id
-		$this->DonationId = $uuid;
-
+		//convert and store the request id
+		$this->RequestId = $uuid;
 	}
+
 }
