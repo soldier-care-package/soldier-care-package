@@ -150,6 +150,38 @@ class Item implements \JsonSerializable {
 		}
 		$this->itemRequestId = $uuid;
 	}
+	/**
+	 * accessor method for item tracking number
+	 *
+	 * @return string value of item tracking number
+	 **/
+	public function getItemTrackingNumber() : string {
+		return($this->itemTrackingNumber);
+	}
+
+	/**
+	 * mutator method for item tracking number
+	 *
+	 * @param string $newItemTrackingNumber new value of item tracking number
+	 * @throws \InvalidArgumentException if $newItemTrackingNumber is not a string or insecure
+	 * @throws \RangeException if $newItemTrackingNumber is > 40 characters
+	 * @throws \TypeError if $newItemTrackingNumber is not a string
+	 **/
+	public function setItemTrackingNumber( string  $newItemTrackingNumber) : void {
+		//verify the item tracking number is secure
+		$newItemTrackingNumber = trim($newItemTrackingNumber);
+		$newItemTrackingNumber= filter_var($newItemTrackingNumber, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newItemTrackingNumber) === true) {
+			throw(new \InvalidArgumentException("item tracking number is empty or insecure"));
+		}
+		//verify the item tracking number will fit in tbe database
+		if(strlen($newItemTrackingNumber) > 255){
+			throw(new\RangeException("item tracking number is too large"));
+		}
+		//store the item tracking number
+		$this->itemTrackingNumber = $newItemTrackingNumber;
+	}
+
 
 
 
