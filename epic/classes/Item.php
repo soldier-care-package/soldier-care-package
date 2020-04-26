@@ -182,7 +182,6 @@ class Item implements \JsonSerializable {
 		$this->itemTrackingNumber = $newItemTrackingNumber;
 	}
 
-
 	/**
 	 * accessor method for item url
 	 *
@@ -213,6 +212,33 @@ class Item implements \JsonSerializable {
 		}
 		//store the item url
 		$this->itemUrl = $newItemUrl;
+	}
+
+	/**
+	 * inserts this Item into mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+
+	public function insert(\PDO $pdo) : void {
+		//query template
+		$query = "INSERT INTO item(itemId, itemDonationId, itemRequestId, itemTrackingNumber, itemUrl) 
+						VALUES(:itemId, :itemDonationId, :itemRequestId, :itemTrackingNumber, :itemUrl)";
+
+		//send the statement to PDO so it knows what to do.
+		$statement = $pdo->prepare($query);
+
+		//bind the member variable to the place holders in the template
+		//left out date because no date in data
+		$parameters = ["itemId" => $this->itemId->getBytes(),
+			"itemDonationId" => $this->itemDonationId->getBytes() ,
+			"itemRequestId" => $this->itemRequestId->getBytes() ,
+			"itemTrackingNumber" => $this->itemTrackingNumber,
+			"itemUrl" => $this->itemUrl];
+
+		//Execute the statement on the database
+		$statement->execute($parameters);
 	}
 
 
