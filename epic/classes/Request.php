@@ -95,4 +95,29 @@ class Request implements \JsonSerializable {
 		$this->RequestId = $uuid;
 	}
 
+	/**
+	 * accessor method for request profile id
+	 * @return Uuid value of request profile id
+	 */
+	public function getRequestProfileId() : Uuid {
+		return($this->requestProfileId);
+	}
+
+	/**
+	 * mutator method for request profile id
+	 *
+	 * @param Uuid|string $newRequestProfileId new value of request profile id
+	 * @throws \RangeException if $newRequestProfileId is not positive
+	 * @throws \TypeError if $newRequestProfileId is not a uuid or string
+	 **/
+	public function setRequestProfileId( $newRequestProfileId) : void {
+		try {
+			$uuid = self::validateUuid($newRequestProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(),0, $exception));
+		}
+		$this->requestProfileId = $uuid;
+	}
+
 }
