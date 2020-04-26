@@ -37,7 +37,7 @@ class Donation implements \JsonSerializable {
 	 *
 	 *@param string|Uuid $newDonationId id of this Donation or null if a new Donation
 	 *@param string|Uuid $newDonationProfileId id of the Profile that Accepted this Donation
-	 *@para \DateTime|string|null $newDonationDate date and time Donation was sent or null if set to current date and time
+	 *@param  \DateTime|string|null $newDonationDate date and time Donation was sent or null if set to current date and time
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
