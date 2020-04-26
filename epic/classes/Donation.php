@@ -118,10 +118,27 @@ class Donation implements \JsonSerializable {
 	}
 
 	/**
-	 * mutator method for tweet date
+	 * mutator method for donation date
 	 *
-	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
-	 * @throws \RangeException if $newTweetDate is a date that does not exist
+	 * @param \DateTime|string|null $newDonationDate donation date as a DateTime object or string (or null to load the current time)
+	 * @throws \InvalidArgumentException if $newDonationDate is not a valid object or string
+	 * @throws \RangeException if $newDonationDate is a date that does not exist
 	 **/
+
+	public function setDonationDate($newDonationDate = null) : void {
+		// base case: if the date is null, use the current date and time
+		if($newDonationDate === null) {
+			$this->DonationDate = new \DateTime();
+			return;
+		}
+
+		// store the like date using the ValidateDate trait
+		try {
+			$newDonationDate = self::validateDateTime($newDonationDate);
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->donationDate = $newDonationDate;
+	}
 }
