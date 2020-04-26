@@ -159,7 +159,7 @@ class Donation implements \JsonSerializable {
 		//bind the member variable to the place holders in the template
 		$formattedDate = $this->donationDate->format("Y-m-d H:i:s.u");
 		$parameters = ["donationId" => $this->donationId->getBytes(),
-			"donationProfileId" => $this->donationProfileId ,
+			"donationProfileId" => $this->donationProfileId->getBytes(),
 			"donationDate" => $formattedDate];
 
 		//Execute the statement on the database

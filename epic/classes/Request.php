@@ -188,5 +188,31 @@ class Request implements \JsonSerializable {
 		$this->requestDate = $newRequestDate;
 	}
 
+	/**
+	 * inserts this Request into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+		//query template
+		$query = "INSERT INTO request(requestId, requestProfileId, requestContent, requestDate) VALUES(:requestId, :requestProfileId, :requestDate)";
+
+		//send the statement to PDO so it knows what to do.
+		$statement = $pdo->prepare($query);
+
+		//bind the member variable to the place holders in the template
+		$formattedDate = $this->requestDate->format("Y-m-d H:i:s.u");
+		$parameters = ["requestId" => $this->requestId->getBytes(),
+			"requestProfileId" => $this->requestProfileId->getBytes(),
+			"requestContent" => $this->requestContent,
+			"requestDate" => $formattedDate];
+
+		//Execute the statement on the database
+		$statement->execute($parameters);
+	}
+
+
 
 }
