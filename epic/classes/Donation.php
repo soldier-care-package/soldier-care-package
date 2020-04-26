@@ -84,7 +84,44 @@ class Donation implements \JsonSerializable {
 
 	}
 	/**
-	 * accessor method for tweet content
-	 * @return string value of tweet
+	 * accessor method for donation profile id
+	 * @return Uuid value of donation profile id
 	 */
+	public function getDonationProfileId() : Uuid {
+		return($this->donationProfileId);
+	}
+
+	/**
+	 * mutator method for donation profile id
+	 *
+	 * @param Uuid|string $newDonationProfileId new value of donation profile id
+	 * @throws \RangeException if $newDonationProfileId is not positive
+	 * @throws \TypeError if $newDonationProfileId is not a uuid or string
+	 **/
+	public function setDonationProfileId( $newDonationProfileId) : void {
+		try {
+			$uuid = self::validateUuid($newDonationProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(),0, $exception));
+		}
+		$this->donationProfileId = $uuid;
+	}
+
+	/**
+	 * accessor method for donation date
+	 *
+	 * @return \DateTime value of donation date
+	 **/
+	public function  getDonationDate() :\DateTime {
+		return($this->donationDate);
+	}
+
+	/**
+	 * mutator method for tweet date
+	 *
+	 * @param \DateTime|string|null $newTweetDate tweet date as a DateTime object or string (or null to load the current time)
+	 * @throws \InvalidArgumentException if $newTweetDate is not a valid object or string
+	 * @throws \RangeException if $newTweetDate is a date that does not exist
+	 **/
 }
