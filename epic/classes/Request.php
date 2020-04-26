@@ -263,6 +263,23 @@ class Request implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 */
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["requestId"] = $this->requestId->toString();
+		$fields["requestProfileId"] = $this->requestProfileId->toString();
+		unset($fields["requestContent"]);
+
+		//format the date so that the front end can consume it
+		$fields["requestDate"] = round(floatval($this->requestDate->format("U.u")) * 1000);
+		return($fields);
+	}
+
 
 
 

@@ -224,7 +224,7 @@ class Donation implements \JsonSerializable {
 		$fields = get_object_vars($this);
 
 		$fields["donationId"] = $this->donationId->toString();
-		unset($fields["donationProfileId"]);
+		$fields["donationProfileId"] = $this->donationProfileId->toString();
 
 		//format the date so that the front end can consume it
 		$fields["donationDate"] = round(floatval($this->donationDate->format("U.u")) * 1000);
