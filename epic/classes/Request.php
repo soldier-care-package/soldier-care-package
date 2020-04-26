@@ -213,6 +213,35 @@ class Request implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * updates this Request in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException whn mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		//create query template
+		$query = "UPDATE request
+					SET requestId = :requestId, requestProfileId = :requestProfileId, requestContent = :requestContent, requestDate = :requestDate
+					WHERE requestId = :requestId";
+
+		//prepare a statement using the SQL so PDO knows what to do.
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in in the template
+		$formattedDate = $this->requestDate->format("Y-m-d H:i:s.u");
+		$parameters = ["requestId" => $this->requestId->getBytes(),
+			"requestProfileId" => $this->requestProfileId->getBytes(),
+			"requestContent" => $this->requestContent,
+			"requestDate" => $formattedDate];
+
+		//now execute he statement on the database
+		$statement->execute($parameters);
+	}
+
+
 
 
 }
