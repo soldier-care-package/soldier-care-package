@@ -120,4 +120,39 @@ class Request implements \JsonSerializable {
 		$this->requestProfileId = $uuid;
 	}
 
+	/**
+	 * accessor method for request content
+	 *
+	 * @return string value of request content
+	 **/
+	public function getRequestContent() : string {
+		return($this->requestContent);
+	}
+
+	/**
+	 * mutator method for request content
+	 *
+	 * @param string $newRequestContent new value of request content
+	 * @throws \InvalidArgumentException if $newRequestContent is not a string or insecure
+	 * @throws \RangeException if $newRequestContent is > 500 characters
+	 * @throws \TypeError if $newRequestContent is not a string
+	 **/
+	public function setRequestContent(string $newRequestContent) : void {
+		// verify the request content is secure
+		$newRequestContent = trim($newRequestContent);
+		$newRequestContent = filter_var($newRequestContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newRequestContent) === true) {
+			throw(new \InvalidArgumentException("request content is empty or insecure"));
+		}
+
+		// verify the request content will fit in the database
+		if(strlen($newRequestContent) > 500) {
+			throw(new \RangeException("request content too large"));
+		}
+
+		// store the request content
+		$this->requestContent = $newRequestContent;
+	}
+
+
 }
