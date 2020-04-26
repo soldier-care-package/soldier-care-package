@@ -127,6 +127,30 @@ class Item implements \JsonSerializable {
 		}
 		$this->itemDonationId = $uuid;
 	}
+	/** accessor method for itemRequestId
+	 *@return Uuid of itemRequestId
+	 */
+	public function getItemRequestId() : Uuid {
+		return($this->itemRequestId);
+	}
+
+	/**
+	 * mutator method for item request id
+	 *
+	 * @param Uuid|string $newItemRequestId new value of item request id
+	 * @throws \RangeException if $newItemRequestId is not positive
+	 * @throws \TypeError if $newItemRequestId is not a uuid or string
+	 **/
+	public function setItemRequestId( $newItemRequestId) : void {
+		try {
+			$uuid = self::validateUuid($newItemRequestId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(),0, $exception));
+		}
+		$this->itemRequestId = $uuid;
+	}
+
 
 
 
