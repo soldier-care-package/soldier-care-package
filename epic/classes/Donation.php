@@ -141,4 +141,57 @@ class Donation implements \JsonSerializable {
 		}
 		$this->donationDate = $newDonationDate;
 	}
+
+	/**
+	 * inserts this Donation into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+		//query template
+		$query = "INSERT INTO donation(donationId, donationProfileId, donationDate) VALUES(:donationId, :donationProfileId, :donationDate)";
+
+		//send the statement to PDO so it knows what to do.
+		$statement = $pdo->prepare($query);
+
+		//bind the member variable to the place holders in the template
+		$formattedDate = $this->donationDate->format("Y-m-d H:i:s.u");
+		$parameters = ["donationId" => $this->donationId->getBytes(),
+			"donationProfileId" => $this->donationProfileId ,
+			"donationDate" => $formattedDate];
+
+		//Execute the statement on the database
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * updates this Donation in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException whn mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		//create query template
+		$query = "UPDATE donation
+					SET donationId = :donationId, donationProfileId = :donationProfileId, donationDate = :donationDate
+					WHERE donationId = :donationId";
+
+		//prepare a statement using the SQL so PDO knows what to do.
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in in the template
+		$formattedDate = $this->donationDate->format("Y-m-d H:i:s.u");
+		$parameters = ["donationId" => $this->donationId->getBytes(),
+			"donationProfileId" => $this->donationProfileId->getBytes(),
+			"donationDate" => $formattedDate];
+
+		//now execute he statement on the database
+		$statement->execute($parameters);
+	}
+
+
 }
