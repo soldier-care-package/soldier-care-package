@@ -154,5 +154,39 @@ class Request implements \JsonSerializable {
 		$this->requestContent = $newRequestContent;
 	}
 
+	/**
+	 * accessor method for request date
+	 *
+	 * @return \DateTime value of request date
+	 **/
+	public function  getRequestDate() :\DateTime {
+		return($this->requestDate);
+	}
+
+	/**
+	 * mutator method for request date
+	 *
+	 * @param \DateTime|string|null $newRequestDate request date as a DateTime object or string (or null to load the current time)
+	 * @throws \InvalidArgumentException if $newRequestDate is not a valid object or string
+	 * @throws \RangeException if $newRequestDate is a date that does not exist
+	 **/
+
+	public function setRequestDate($newRequestDate = null) : void {
+		// base case: if the date is null, use the current date and time
+		if($newRequestDate === null) {
+			$this->RequestDate = new \DateTime();
+			return;
+		}
+
+		// store the request date using the ValidateDate trait
+		try {
+			$newRequestDate = self::validateDateTime($newRequestDate);
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->requestDate = $newRequestDate;
+	}
+
 
 }

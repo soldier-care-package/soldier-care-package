@@ -132,7 +132,7 @@ class Donation implements \JsonSerializable {
 			return;
 		}
 
-		// store the like date using the ValidateDate trait
+		// store the donation date using the ValidateDate trait
 		try {
 			$newDonationDate = self::validateDateTime($newDonationDate);
 		} catch(\InvalidArgumentException | \RangeException $exception) {
