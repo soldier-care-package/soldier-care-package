@@ -175,11 +175,44 @@ class Item implements \JsonSerializable {
 			throw(new \InvalidArgumentException("item tracking number is empty or insecure"));
 		}
 		//verify the item tracking number will fit in tbe database
-		if(strlen($newItemTrackingNumber) > 255){
+		if(strlen($newItemTrackingNumber) > 40){
 			throw(new\RangeException("item tracking number is too large"));
 		}
 		//store the item tracking number
 		$this->itemTrackingNumber = $newItemTrackingNumber;
+	}
+
+
+	/**
+	 * accessor method for item url
+	 *
+	 * @return string value of item url
+	 **/
+	public function getItemUrl() : string {
+		return($this->itemUrl);
+	}
+
+	/**
+	 * mutator method for item url
+	 *
+	 * @param string $newItemUrl new value of item url
+	 * @throws \InvalidArgumentException if $newItemUrl is not a string or insecure
+	 * @throws \RangeException if $newItemUrl is > 255 characters
+	 * @throws \TypeError if $newItemUrl is not a string
+	 **/
+	public function setItemUrl( string  $newItemUrl) : void {
+		//verify the item url is secure
+		$newItemUrl = trim($newItemUrl);
+		$newItemUrl= filter_var($newItemUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newItemUrl) === true) {
+			throw(new \InvalidArgumentException("item url is empty or insecure"));
+		}
+		//verify the item url will fit in tbe database
+		if(strlen($newItemUrl) > 255){
+			throw(new\RangeException("item url is too large"));
+		}
+		//store the item url
+		$this->itemUrl = $newItemUrl;
 	}
 
 
