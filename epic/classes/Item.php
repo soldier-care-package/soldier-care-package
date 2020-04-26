@@ -79,12 +79,30 @@ class Item implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
-	/** accessor method for authorId
-	 *@return Uuid of authorId
+	/** accessor method for itemId
+	 *@return Uuid of itemId
 	 */
 
-	public function getAuthorId() : Uuid {
-		return($this->authorId);
+	public function getItemId() : Uuid {
+		return($this->itemId);
 	}
+
+	/**
+	 * mutator method for item id
+	 *
+	 * @param Uuid|string $newItemId new value of item id
+	 * @throws \RangeException if $newItemId is not positive
+	 * @throws \TypeError if $newItemId is not a uuid or string
+	 **/
+	public function setItemId( $newItemId) : void {
+		try {
+			$uuid = self::validateUuid($newItemId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(),0, $exception));
+		}
+		$this->itemId = $uuid;
+	}
+
 
 }
