@@ -1,5 +1,5 @@
 <?php
-namespace cap28_soldiercare\SoldierCarePackage;
+namespace Cohort28SCP\SoldierCarePackage;
 /**
  * Trait to Validate a mySQL Date
  *
