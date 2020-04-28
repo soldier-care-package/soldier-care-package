@@ -69,14 +69,14 @@ class Profile implements \JsonSerializable {
 	 **/
 	private $profileUsername;
 	/**
-	 *  the zipcode where the soldier is stationed; the zip is used for shipping information
+	 *  the zip code where the soldier is stationed; the zip is used for shipping information
 	 **/
 	private $profileZip;
 
 	/**
 	 * constructor for this profile
 	 *
-	 * @param uuid $newProfileId new profile id
+	 * @param Uuid $newProfileId new profile id
 	 * @param string $newProfileActivationToken new profile activation token
 	 * @param string $newProfileAddress new profile address
 	 * @param string $newProfileAvatarUrl new profile avatar url
@@ -510,11 +510,11 @@ class Profile implements \JsonSerializable {
 	public function update(\PDO $pdo) : void {
 
 		// create query template
-		$query = "UPDATE profile SET profileId = :profileId, :profileActivationToken, :profileAddress, :profileAvatarUrl, :profileBio, :profileCity, :profileEmail, :profileHash, :profileName, :profileRank, :profileState, :profileType, :profileUsername, :profileZip
+		$query = "UPDATE profile SET profileId = :profileId, profileActivationToken = :profileActivationToken, profileAddress = :profileAddress, profileAvatarUrl = :profileAvatarUrl, profileBio = :profileBio, profileCity = :profileCity, profileEmail = :profileEmail, profileHash = :profileHash, profileName = :profileName, profileRank =:profileRank, profileState = :profileState, profileType =:profileType, profileUsername =:profileUsername, profileZip = :profileZip
 						WHERE profileId = :profileId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["profileId" => $this->profileId, "profileActivationToken" => $this->profileActivationToken, "profileAddress" => $this->profileAddress, "profileAvatarUrl" => $this->profileAvatarUrl, "profileBio" => $this->profileBio, "profileCity" => $this->profileCity, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profileName" => $this->profileName, "profileRank" => $this->profileRank, "profileState" => $this->profileState, "profileType" => $this->profileType, "profileUsername" => $this->profileUsername, "profileZip" => $this->profileZip];
+		$parameters = ["profileId" => $this->profileId->getBytes(), "profileActivationToken" => $this->profileActivationToken, "profileAddress" => $this->profileAddress, "profileAvatarUrl" => $this->profileAvatarUrl, "profileBio" => $this->profileBio, "profileCity" => $this->profileCity, "profileEmail" => $this->profileEmail, "profileHash" => $this->profileHash, "profileName" => $this->profileName, "profileRank" => $this->profileRank, "profileState" => $this->profileState, "profileType" => $this->profileType, "profileUsername" => $this->profileUsername, "profileZip" => $this->profileZip];
 		$statement->execute($parameters);
 	}
 
