@@ -289,6 +289,45 @@ class Donation implements \JsonSerializable {
 	}
 
 	/**
+	 * gets the Donations by profile id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $donationProfileId profile id to search by
+	 * @return \SplFixedArray SplFixedArray of Donations found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getDonationByDonationProfileId(\PDO $pdo, $donationProfileId) : \SplFixedArray {
+
+		try {
+			$donationProfileId = self::validateUuid($donationProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT donationId, donationProfileId, donationDate FROM donation WHERE donationProfileId = :donationProfileId";
+		$statement = $pdo->prepare($query);
+		// bind the donation profile id to the place holder in the template
+		$parameters = ["donationProfileId" => $donationProfileId->getBytes()];
+		$statement->execute($parameters);
+		// build an array of donations
+		$donations = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$donation = new Donation($row["donationId"], $row["donationProfileId"], $row["donationDate"]);
+				$donations[$donations->key()] = $donation;
+				$donations->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($donations);
+	}
+
+	/**
 	 * formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
