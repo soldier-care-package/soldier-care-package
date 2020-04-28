@@ -14,7 +14,7 @@ use Ramsey\Uuid;
  *
  * @author Nohemi Tarango <ntarango3@cnm.edu>
  **/
-class Profile {
+class Profile implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 *  id for this profile; this is the primary key
@@ -71,6 +71,7 @@ class Profile {
 	/**
 	 *  the zipcode where the soldier is stationed; the zip is used for shipping information
 	 **/
+	private $profileZip;
 
 	/**
 	 * constructor for this profile
@@ -607,5 +608,31 @@ class Profile {
 			}
 		}
 		return ($profiles);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 */
+	public function jsonSerialize(): array {
+		$fields = get_object_vars($this);
+
+		$fields["profileId"] = $this->profileId->toString();
+
+		unset($fields["profileActivationToken"]);
+		unset($fields["profileAddress"]);
+		unset($fields["profileAvatarUrl"]);
+		unset($fields["profileBio"]);
+		unset($fields["profileCity"]);
+		unset($fields["profileEmail"]);
+		unset($fields["profileHash"]);
+		unset($fields["profileName"]);
+		unset($fields["profileRank"]);
+		unset($fields["profileState"]);
+		unset($fields["profileType"]);
+		unset($fields["profileUsername"]);
+		unset($fields["profileZip"]);
+		return($fields);
 	}
 }
