@@ -1,11 +1,10 @@
 <?php
 
-namespace Soldier_Care_Package\Soldier_Care_Package;
+namespace Cohort28SCP\SoldierCarePackage;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -382,15 +381,10 @@ class Request implements \JsonSerializable {
 
 		$fields["requestId"] = $this->requestId->toString();
 		$fields["requestProfileId"] = $this->requestProfileId->toString();
-		unset($fields["requestContent"]);
 
 		//format the date so that the front end can consume it
 		$fields["requestDate"] = round(floatval($this->requestDate->format("U.u")) * 1000);
 		return($fields);
 	}
-
-
-
-
 
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace Soldier_Care_Package\Soldier_Care_Package;
+namespace Cohort28SCP\SoldierCarePackage;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -18,7 +17,7 @@ use Ramsey\Uuid\Uuid;
  * @version 3.0.0
  **/
 class Donation implements \JsonSerializable {
-	use ValiateDate;
+	use ValidateDate;
 	use ValidateUuid;
 	/** id for Donation; this is the primary key
 	 * @var Uuid $donationId
@@ -129,7 +128,7 @@ class Donation implements \JsonSerializable {
 	public function setDonationDate($newDonationDate = null): void {
 		// base case: if the date is null, use the current date and time
 		if($newDonationDate === null) {
-			$this->DonationDate = new \DateTime();
+			$this->donationDate = new \DateTime();
 			return;
 		}
 
@@ -167,32 +166,32 @@ class Donation implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	/**
-	 * updates this Donation in mySQL
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @throws \PDOException whn mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
-	 **/
-	public function update(\PDO $pdo): void {
-
-		//create query template
-		$query = "UPDATE donation
-					SET donationId = :donationId, donationProfileId = :donationProfileId, donationDate = :donationDate
-					WHERE donationId = :donationId";
-
-		//prepare a statement using the SQL so PDO knows what to do.
-		$statement = $pdo->prepare($query);
-
-		// bind the member variables to the place holders in in the template
-		$formattedDate = $this->donationDate->format("Y-m-d H:i:s.u");
-		$parameters = ["donationId" => $this->donationId->getBytes(),
-			"donationProfileId" => $this->donationProfileId->getBytes(),
-			"donationDate" => $formattedDate];
-
-		//now execute he statement on the database
-		$statement->execute($parameters);
-	}
+//	/**
+//	 * updates this Donation in mySQL
+//	 *
+//	 * @param \PDO $pdo PDO connection object
+//	 * @throws \PDOException whn mySQL related errors occur
+//	 * @throws \TypeError if $pdo is not a PDO connection object
+//	 **/
+//	public function update(\PDO $pdo): void {
+//
+//		//create query template
+//		$query = "UPDATE donation
+//					SET donationId = :donationId, donationProfileId = :donationProfileId, donationDate = :donationDate
+//					WHERE donationId = :donationId";
+//
+//		//prepare a statement using the SQL so PDO knows what to do.
+//		$statement = $pdo->prepare($query);
+//
+//		// bind the member variables to the place holders in in the template
+//		$formattedDate = $this->donationDate->format("Y-m-d H:i:s.u");
+//		$parameters = ["donationId" => $this->donationId->getBytes(),
+//			"donationProfileId" => $this->donationProfileId->getBytes(),
+//			"donationDate" => $formattedDate];
+//
+//		//now execute he statement on the database
+//		$statement->execute($parameters);
+//	}
 
 	/**
 	 * deletes this Donation from mySQL
@@ -225,6 +224,8 @@ class Donation implements \JsonSerializable {
 	 * @return Donation|null donation found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
+	 * @throws \InvalidArgumentException
+	 * @thr
 	 **/
 	public static function getDonationByDonationId(\PDO $pdo, $donationId): ?Donation {
 		//sanitize the donationId before searching
@@ -297,7 +298,7 @@ class Donation implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getDonationByDonationProfileId(\PDO $pdo, $donationProfileId) : \SplFixedArray {
+	public static function getDonationsByDonationProfileId(\PDO $pdo, $donationProfileId) : \SplFixedArray {
 
 		try {
 			$donationProfileId = self::validateUuid($donationProfileId);

@@ -10,7 +10,7 @@ use Ramsey\Uuid;
 /**
  * Classes for the profile table
  *
- * This is the code for the classes and methods for the profile table
+ * This is the code for the Classes and methods for the profile table
  *
  * @author Nohemi Tarango <ntarango3@cnm.edu>
  **/
