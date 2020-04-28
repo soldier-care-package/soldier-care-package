@@ -389,8 +389,4 @@ class Request implements \JsonSerializable {
 		return($fields);
 	}
 
-
-
-
-
 }

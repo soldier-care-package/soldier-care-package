@@ -129,7 +129,7 @@ class Donation implements \JsonSerializable {
 	public function setDonationDate($newDonationDate = null): void {
 		// base case: if the date is null, use the current date and time
 		if($newDonationDate === null) {
-			$this->DonationDate = new \DateTime();
+			$this->donationDate = new \DateTime();
 			return;
 		}
 
