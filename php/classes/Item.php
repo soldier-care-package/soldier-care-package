@@ -1,6 +1,6 @@
 <?php
 
-namespace Soldier_Care_Package\Soldier_Care_Package;
+namespace Cohort28SCP\SoldierCarePackage;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
