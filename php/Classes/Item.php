@@ -336,7 +336,7 @@ class Item implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $itemRequestId request id to search by
-	 * @return \SplFixedArray SplFixedArray of Request found
+	 * @return \SplFixedArray SplFixedArray of Items found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
@@ -360,6 +360,45 @@ class Item implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$item = new item($row["itemId"], $row["itemDonationId"], $row["itemRequestId"], $row["itemTrackingNumber"], $row["itemUrl"]);
+				$items[$items->key()] = $item;
+				$items->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($items);
+	}
+
+	/**
+	 * gets the Item by donation id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $itemDonationId doantion id to search by
+	 * @return \SplFixedArray SplFixedArray of items found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getItemByDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
+
+		try {
+			$itemDonationId = self::validateUuid($itemDonationId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber, itemUrl FROM item WHERE itemDonationId = :itemDonationId";
+		$statement = $pdo->prepare($query);
+		// bind the item donation id to the place holder in the template
+		$parameters = ["itemDonationId" => $itemDonationId->getBytes()];
+		$statement->execute($parameters);
+		// build an array of items
+		$items = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$item = new Item($row["itemId"], $row["itemDonationId"], $row["itemRequestId"], $row["itemTrackingNumber"], $row["itemUrl"]);
 				$items[$items->key()] = $item;
 				$items->next();
 			} catch(\Exception $exception) {
