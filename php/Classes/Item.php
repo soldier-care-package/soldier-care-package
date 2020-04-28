@@ -332,42 +332,42 @@ class Item implements \JsonSerializable {
 	}
 
 	/**
-	 * gets the Request by profile id
+	 * gets the items by request id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $requestProfileId profile id to search by
+	 * @param Uuid|string $itemRequestId request id to search by
 	 * @return \SplFixedArray SplFixedArray of Request found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getRequestByRequestProfileId(\PDO $pdo, $requestProfileId) : \SplFixedArray {
+	public static function getItemByItemRequestId(\PDO $pdo, $itemRequestId) : \SplFixedArray {
 
 		try {
-			$requestProfileId = self::validateUuid($requestProfileId);
+			$itemRequestId = self::validateUuid($itemRequestId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT requestId, requestProfileId, requestContent, requestDate FROM request WHERE requestProfileId = :requestProfileId";
+		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber FROM item WHERE itemRequestId = :itemRequestId";
 		$statement = $pdo->prepare($query);
-		// bind the request profile id to the place holder in the template
-		$parameters = ["requestProfileId" => $requestProfileId->getBytes()];
+		// bind the item request id to the place holder in the template
+		$parameters = ["itemRequestId" => $itemRequestId->getBytes()];
 		$statement->execute($parameters);
-		// build an array of tweets
-		$requests = new \SplFixedArray($statement->rowCount());
+		// build an array of items
+		$items = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$request = new Request($row["requestId"], $row["requestProfileId"], $row["requestContent"], $row["requestDate"]);
-				$requests[$requests->key()] = $request;
-				$requests->next();
+				$item = new item($row["itemId"], $row["itemDonationId"], $row["itemRequestId"], $row["itemTrackingNumber"], $row["itemUrl"]);
+				$items[$items->key()] = $item;
+				$items->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($requests);
+		return ($items);
 	}
 
 	/**
