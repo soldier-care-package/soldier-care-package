@@ -304,6 +304,35 @@ class Request implements \JsonSerializable {
 	}
 
 	/**
+	 * gets all Requests
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of Requests found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getAllRequests(\PDO $pdo) : \SPLFixedArray {
+		//create query template
+		$query = "SELECT requestId, requestProfileId, requestContent, requestDate FROM request";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		//build an array of requests
+		$requests = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try{
+				$request = new Request($row["requestId"], $row["requestProfileId"], $row["requestContent"], $row["donationDate"]);
+				$requests[$requests->key()] = $request;
+				$requests->next();
+			} catch(\Exception $exception) {
+				//if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($requests);
+	}
+	/**
 	 * formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
