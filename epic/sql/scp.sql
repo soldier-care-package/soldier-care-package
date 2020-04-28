@@ -1,20 +1,25 @@
 ALTER DATABASE CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS donation;
+DROP TABLE IF EXISTS request;
+DROP TABLE IF EXISTS profile;
+
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,
 	profileActivationToken CHAR(32),
-	profileAddress VARCHAR (32) NOT NULL,
-	profileAvatarUrl VARCHAR (255) NOT NULL,
+	profileAddress VARCHAR (32),
+	profileAvatarUrl VARCHAR (255),
 	profileBio VARCHAR (500),
-	profileCity CHAR(3) NOT NULL,
+	profileCity CHAR(3),
 	profileEmail VARCHAR(128) NOT NULL,
 	profileHash CHAR(97) NOT NULL,
-	profileName VARCHAR(32) NOT NULL,
-	profileRank VARCHAR(32) NOT NULL,
-	profileState CHAR(2) NOT NULL,
+	profileName CHAR(100) NOT NULL,
+	profileRank VARCHAR(32),
+	profileState CHAR(2),
 	profileType VARCHAR(15) NOT NULL,
 	profileUsername VARCHAR(32) NOT NULL,
-	profileZip VARCHAR(9), NOT NULL,
+	profileZip VARCHAR(9),
 	UNIQUE(profileEmail),
 	UNIQUE(profileUsername),
 	PRIMARY KEY(profileId)
@@ -41,9 +46,9 @@ CREATE TABLE donation(
 
 CREATE TABLE item(
 	itemId BINARY(16) NOT NULL,
-	itemDonationId BINARY(16) NOT NULL,
+	itemDonationId BINARY(16),
 	itemRequestId BINARY(16) NOT NULL,
-	itemTrackingNumber CHAR(20) NOT NULL,
+	itemTrackingNumber CHAR(20),
 	itemUrl VARCHAR(255) NOT NULL,
 	INDEX(itemDonationId),
 	INDEX(itemRequestId),
