@@ -1,11 +1,10 @@
 <?php
 
-namespace Soldier_Care_Package\Soldier_Care_Package;
+namespace Cohort28SCP\SoldierCarePackage;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -340,7 +339,7 @@ class Item implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getItemByItemRequestId(\PDO $pdo, $itemRequestId) : \SplFixedArray {
+	public static function getItemsByItemRequestId(\PDO $pdo, $itemRequestId) : \SplFixedArray {
 
 		try {
 			$itemRequestId = self::validateUuid($itemRequestId);
@@ -379,7 +378,7 @@ class Item implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getItemByDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
+	public static function getItemsByDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
 
 		try {
 			$itemDonationId = self::validateUuid($itemDonationId);
@@ -420,8 +419,6 @@ class Item implements \JsonSerializable {
 		$fields["itemId"] = $this->itemId->toString();
 		$fields["itemDonationId"] = $this->itemDonationId->toString();
 		$fields["itemRequestId"] = $this->itemRequestId->toString();
-		unset($fields["itemTrackingNumber"]);
-		unset($fields["itemUrl"]);
 		return($fields);
 	}
 }
