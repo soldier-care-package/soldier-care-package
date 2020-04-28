@@ -264,6 +264,46 @@ class Request implements \JsonSerializable {
 	}
 
 	/**
+	 * get the Request by RequestId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $requestId request id to search for
+	 * @return Request|null Request found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getRequestByRequestId(\PDO $pdo, $requestId) : ?Request {
+		//sanitize the requestId before searching
+		try{
+			$requestId = self::validateUuid($requestId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			throw(new \PDOException($exception->getMessage(),0, $exception));
+		}
+		//create query template
+		$query = "SELECT requestId, requestProfileId, requestContent, requestDate FROM request WHERE requestId = :requestId";
+		$statement = $pdo->prepare($query);
+
+		//bing the request id to the place holder in the template
+		$parameters = ["requestId" => $requestId->getBytes()];
+		$statement->execute($parameters);
+
+
+		//grab the request from mySQL
+		try {
+			$request = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$request = new Request($row["requestId"], $row["requestProfileId"], $row["requestContent"], $row["requestDate"]);
+			}
+		} catch(\Exception $exception) {
+			//if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($request);
+	}
+
+	/**
 	 * formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize

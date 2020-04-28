@@ -292,43 +292,43 @@ class Item implements \JsonSerializable {
 	}
 
 	/**
-	 * get the Author by AuthorId
+	 * get the Item by ItemId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $authorId author id to search for
-	 * @return Author|null Author found or null if not found
+	 * @param Uuid|string $itemId item id to search for
+	 * @return Item|null Item found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
-		//sanitize the authorId before searching
+	public static function getItemByItemId(\PDO $pdo, $itemId) : ?Item {
+		//sanitize the itemId before searching
 		try{
-			$authorId = self::validateUuid($authorId);
+			$itemId = self::validateUuid($itemId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
 			throw(new \PDOException($exception->getMessage(),0, $exception));
 		}
 		//create query template
-		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorId = :authorId";
+		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber, itemUrl FROM item WHERE itemId = :itemId";
 		$statement = $pdo->prepare($query);
 
-		//bing the author id to the place holder in the template
-		$parameters = ["authorId" => $authorId->getBytes()];
+		//bing the item id to the place holder in the template
+		$parameters = ["itemId" => $itemId->getBytes()];
 		$statement->execute($parameters);
 
 
-		//grab the author from mySQL
+		//grab the item from mySQL
 		try {
-			$author = null;
+			$item = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
+				$item = new Item($row["itemId"], $row["itemDonationId"], $row["itemRequestId"], $row["itemTrackingNumber"], $row["itemUrl"]);
 			}
 		} catch(\Exception $exception) {
 			//if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($author);
+		return($item);
 
 	/**
 	 * formats the state variables for JSON serialization
