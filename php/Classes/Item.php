@@ -302,10 +302,10 @@ class Item implements \JsonSerializable {
 	 **/
 	public static function getItemByItemId(\PDO $pdo, $itemId) : ?Item {
 		//sanitize the itemId before searching
-		try{
+		try {
 			$itemId = self::validateUuid($itemId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
-			throw(new \PDOException($exception->getMessage(),0, $exception));
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//create query template
 		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber, itemUrl FROM item WHERE itemId = :itemId";
@@ -328,7 +328,8 @@ class Item implements \JsonSerializable {
 			//if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($item);
+		return ($item);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization

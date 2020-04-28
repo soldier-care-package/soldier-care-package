@@ -256,7 +256,36 @@ class Donation implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return ($donation);
+	}
 
+	/**
+	 * gets all Donations
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of Donations found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getAllDonations(\PDO $pdo) : \SPLFixedArray {
+		//create query template
+		$query = "SELECT donationId, donationProfileId, donationDate FROM donation";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		//build an array of donations
+		$donations = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try{
+				$donation = new Donation($row["donationId"], $row["donationProfileId"], $row["donationDate"]);
+				$donations[$donations->key()] = $donation;
+				$donations->next();
+			} catch(\Exception $exception) {
+				//if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($donations);
 	}
 
 	/**
