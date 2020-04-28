@@ -1,6 +1,6 @@
 <?php
 
-namespace Cohort28SCP\SoldierCarePackage;
+namespace Soldier_Care_Package\Soldier_Care_Package;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
@@ -388,5 +388,9 @@ class Request implements \JsonSerializable {
 		$fields["requestDate"] = round(floatval($this->requestDate->format("U.u")) * 1000);
 		return($fields);
 	}
+
+
+
+
 
 }

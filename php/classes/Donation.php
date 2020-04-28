@@ -1,6 +1,6 @@
 <?php
 
-namespace Cohort28SCP\SoldierCarePackage;
+namespace Soldier_Care_Package\Soldier_Care_Package;
 
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
@@ -129,7 +129,7 @@ class Donation implements \JsonSerializable {
 	public function setDonationDate($newDonationDate = null): void {
 		// base case: if the date is null, use the current date and time
 		if($newDonationDate === null) {
-			$this->donationDate = new \DateTime();
+			$this->DonationDate = new \DateTime();
 			return;
 		}
 
