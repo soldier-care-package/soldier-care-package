@@ -9,3 +9,11 @@ use Cohort28SCP\SoldierCarePackage\Donation;
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 $secrets =  new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 $pdo = $secrets->getPdoObject();
+
+$donationId = "";
+$donationProfileId = "";
+$donationDate = "";
+
+$donation = new Donation($donationId, $donationProfileId, donationDate);
+
+var_dump($donation);
