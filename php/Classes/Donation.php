@@ -5,6 +5,7 @@ namespace Cohort28SCP\SoldierCarePackage;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
+use mysql_xdevapi\Exception;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -70,6 +71,8 @@ class Donation implements \JsonSerializable {
 	 * @param Uuid|string $newDonationId new value of donation id
 	 * @throws \RangeException if $newDonationId is not positive
 	 * @throws \TypeError if $newDonationId is not a uuid or string
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newDonationId is not a valid object or string
 	 **/
 	public function setDonationId($newDonationId): void {
 		try {
@@ -95,6 +98,8 @@ class Donation implements \JsonSerializable {
 	 * mutator method for donation profile id
 	 *
 	 * @param Uuid|string $newDonationProfileId new value of donation profile id
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newDonationProfileId is not a valid object or string
 	 * @throws \RangeException if $newDonationProfileId is not positive
 	 * @throws \TypeError if $newDonationProfileId is not a uuid or string
 	 **/
@@ -119,10 +124,10 @@ class Donation implements \JsonSerializable {
 
 	/**
 	 * mutator method for donation date
-	 *
 	 * @param \DateTime|string|null $newDonationDate donation date as a DateTime object or string (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newDonationDate is not a valid object or string
 	 * @throws \RangeException if $newDonationDate is a date that does not exist
+	 * @throws \Exception if some other exception occurs
 	 **/
 
 	public function setDonationDate($newDonationDate = null): void {
@@ -224,8 +229,9 @@ class Donation implements \JsonSerializable {
 	 * @return Donation|null donation found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
-	 * @throws \InvalidArgumentException
-	 * @thr
+	 * @throws \InvalidArgumentException when variables is not a valid object or string
+	 * @throws \RangeException when variable doesn't exist
+	 * @throws \Exception if some other Exception occurs
 	 **/
 	public static function getDonationByDonationId(\PDO $pdo, $donationId): ?Donation {
 		//sanitize the donationId before searching
@@ -295,6 +301,8 @@ class Donation implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $donationProfileId profile id to search by
 	 * @return \SplFixedArray SplFixedArray of Donations found
+	 * @throws \InvalidArgumentException when variables is not a valid object or string
+	 * @throws \RangeException when variable doesn't exist
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/

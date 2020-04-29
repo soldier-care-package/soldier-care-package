@@ -92,6 +92,8 @@ class Item implements \JsonSerializable {
 	 * @param Uuid|string $newItemId new value of item id
 	 * @throws \RangeException if $newItemId is not positive
 	 * @throws \TypeError if $newItemId is not a uuid or string
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newItemId is not a valid object or string
 	 **/
 	public function setItemId( $newItemId) : void {
 		try {
@@ -115,6 +117,8 @@ class Item implements \JsonSerializable {
 	 *
 	 * @param Uuid|string $newItemDonationId new value of item donation id
 	 * @throws \RangeException if $newItemDonationId is not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newItemDonationId is not a valid object or string
 	 * @throws \TypeError if $newItemDonationId is not a uuid or string
 	 **/
 	public function setItemDonationId( $newItemDonationId) : void {
@@ -139,6 +143,8 @@ class Item implements \JsonSerializable {
 	 * @param Uuid|string $newItemRequestId new value of item request id
 	 * @throws \RangeException if $newItemRequestId is not positive
 	 * @throws \TypeError if $newItemRequestId is not a uuid or string
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newItemRequestId is not a valid object or string
 	 **/
 	public function setItemRequestId( $newItemRequestId) : void {
 		try {
@@ -297,6 +303,9 @@ class Item implements \JsonSerializable {
 	 * @param Uuid|string $itemId item id to search for
 	 * @return Item|null Item found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \RangeException if $itemId is not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newItemId is not a valid Uuid or string
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 	public static function getItemByItemId(\PDO $pdo, $itemId) : ?Item {
@@ -338,6 +347,9 @@ class Item implements \JsonSerializable {
 	 * @return \SplFixedArray SplFixedArray of Items found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \RangeException when variabled are not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if variables are not a valid Uuid or string
 	 **/
 	public static function getItemsByItemRequestId(\PDO $pdo, $itemRequestId) : \SplFixedArray {
 
@@ -377,6 +389,9 @@ class Item implements \JsonSerializable {
 	 * @return \SplFixedArray SplFixedArray of items found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \RangeException if variables are not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if variables are not a valid object or string
 	 **/
 	public static function getItemsByDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
 
