@@ -82,6 +82,8 @@ class Request implements \JsonSerializable {
 	 * @param Uuid|string $newRequestId new value of request id
 	 * @throws \RangeException if $newRequestId is not positive
 	 * @throws \TypeError if $newRequestId is not a uuid or string
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newRequestId is not a valid Uuid or string
 	 **/
 	public function setRequestId( $newRequestId) : void {
 		try {
@@ -108,6 +110,8 @@ class Request implements \JsonSerializable {
 	 * @param Uuid|string $newRequestProfileId new value of request profile id
 	 * @throws \RangeException if $newRequestProfileId is not positive
 	 * @throws \TypeError if $newRequestProfileId is not a uuid or string
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException if $newRequestProfileId is not a valid Uuid or string
 	 **/
 	public function setRequestProfileId( $newRequestProfileId) : void {
 		try {
@@ -168,19 +172,20 @@ class Request implements \JsonSerializable {
 	 * @param \DateTime|string|null $newRequestDate request date as a DateTime object or string (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newRequestDate is not a valid object or string
 	 * @throws \RangeException if $newRequestDate is a date that does not exist
+	 * @throws \Exception if some other exception occurs
 	 **/
 
 	public function setRequestDate($newRequestDate = null) : void {
 		// base case: if the date is null, use the current date and time
 		if($newRequestDate === null) {
-			$this->RequestDate = new \DateTime();
+			$this->requestDate = new \DateTime();
 			return;
 		}
 
 		// store the request date using the ValidateDate trait
 		try {
 			$newRequestDate = self::validateDateTime($newRequestDate);
-		} catch(\InvalidArgumentException | \RangeException $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -270,6 +275,9 @@ class Request implements \JsonSerializable {
 	 * @return Request|null Request found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
+	 * @throws \RangeException when a variable is not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException when variable is not a valid object or string
 	 **/
 	public static function getRequestByRequestId(\PDO $pdo, $requestId) : ?Request {
 		//sanitize the requestId before searching
@@ -333,15 +341,18 @@ class Request implements \JsonSerializable {
 	}
 
 	/**
-	 * gets the Request by profile id
+	 * gets the Requests by profile id
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $requestProfileId profile id to search by
 	 * @return \SplFixedArray SplFixedArray of Request found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \RangeException when variables are not positive
+	 * @throws \Exception if some other exception occurs
+	 * @throws \InvalidArgumentException when variables are not a valid object or string
 	 **/
-	public static function getRequestByRequestProfileId(\PDO $pdo, $requestProfileId) : \SplFixedArray {
+	public static function getRequestsByRequestProfileId(\PDO $pdo, $requestProfileId) : \SplFixedArray {
 
 		try {
 			$requestProfileId = self::validateUuid($requestProfileId);
