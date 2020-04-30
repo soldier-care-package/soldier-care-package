@@ -1,0 +1,15 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Soldier Care Package">
+			<file>ProfileTest.php</file>
+			<file>RequestTest.php</file>
+			<file>DonationTest.php</file>
+			<file>ItemTest.php</file>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">..</directory>
+		</whitelist>
+	</filter>
+</phpunit>
