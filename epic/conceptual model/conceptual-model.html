@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Conceptual Model</title>
+</head>
+<body>
+	<h1>Conceptual Model</h1>
+</body>
+<body>
+	<h2>Profile</h2>
+		<div>
+			<ul>
+				<li>profileId (Primary Key)</li>
+				<li>profileActivationToken</li>
+				<li>profileAddress</li>
+				<li>profileAvatarUrl</li>
+				<li>profileBio</li>
+				<li>profileCity</li>
+				<li>profileEmail</li>
+				<li>profileHash</li>
+				<li>profileName</li>
+				<li>profileRank</li>
+				<li>profileState</li>
+				<li>profileType</li>
+				<li>profileUsername</li>
+				<li>profileZip</li>
+			</ul>
+		</div>
+	<h2>Donation</h2>
+		<div>
+			<ul>
+				<li>donationId (Primary Key)</li>
+				<li>donationProfileId (Foreign Key)</li>
+				<li>donationDate</li>
+			</ul>
+		</div>
+	<h2>Request</h2>
+		<div>
+			<ul>
+				<li>requestId (Primary Key)</li>
+				<li>requestProfileId (Foreign Key)</li>
+				<li>requestContent</li>
+				<li>requestDate</li>
+			</ul>
+		</div>
+	<h2>Item</h2>
+		<div>
+			<ul>
+				<li>itemId (Primary Key)</li>
+				<li>itemDonationId (Foreign Key)</li>
+				<li>itemRequestId (Foreign Key)</li>
+				<li>itemTrackingNumber</li>
+				<li>itemUrl</li>
+			</ul>
+		</div>
+		<div>
+			<ul>
+				<li>One profile can make many request</li>
+				<li>One profile can have many donations</li>
+				<li>One request can have many items</li>
+				<li>One donation can have many items</li>
+			</ul>
+		</div>
+</body>
+</html>
