@@ -10,7 +10,7 @@ use Ramsey\Uuid;
 /**
  * Classes for the profile table
  *
- * This is the code for the Classes and methods for the profile table
+ * This is the code for the classes and methods for the profile table
  *
  * @author Nohemi Tarango <ntarango3@cnm.edu>
  **/
@@ -90,7 +90,10 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileType new profile type
 	 * @param string $newProfileUsername new profile username
 	 * @param string $newProfileZip new profile zip
-	 * @throws UnexpectedValueException if any of the parameters are invalid
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds
+	 * @throws \TypeError if a data type violates a data hint
+	 * @throws \Exception if some other exception occurs
 	 **/
 	public function __construct($newProfileId, $newProfileActivationToken, $newProfileAddress, $newProfileAvatarUrl, $newProfileBio, $newProfileCity, $newProfileEmail, $newProfileHash, $newProfileName, $newProfileRank, $newProfileState, $newProfileType, $newProfileUsername, $newProfileZip) {
 		try {
@@ -108,9 +111,8 @@ class Profile implements \JsonSerializable {
 			$this->setProfileType($newProfileType);
 			$this->setProfileUsername($newProfileUsername);
 			$this->setProfileZip($newProfileZip);
-
+		} catch(\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
 			//determine what exception type was thrown
-		} catch(TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -119,22 +121,23 @@ class Profile implements \JsonSerializable {
 	/**
 	 *  accesor method for profile id
 	 *
-	 * @return uuid value of profile id
+	 * @return uuid value of profile id or null of new Profile
 	 **/
-	public function getProfileId() {
+	public function getProfileId() : uuid {
 		return ($this->profileId);
 	}
 
 	/**
 	 * mutator method for profile id
 	 *
-	 * @param uuid $newProfileId new value of profile id
-	 * @throws UnexpectedValueException if $newProfileId is not an integar
+	 * @param Uuid| string $newProfileId new value of profile id
+	 * @throws \RangeException if $newProfileId is not positive
+	 * @throws \TypeError if the profile Id is not valid
 	 **/
 	public function setProfileId($newProfileId) : void {
 		try {
 			$uuid = self::validateUuid($newProfileId);
-		} catch(TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -148,7 +151,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile activation token
 	 **/
-	public function getProfileActivationToken() {
+	public function getProfileActivationToken() : ?string {
 		return ($this->profileActivationToken);
 	}
 
@@ -156,16 +159,26 @@ class Profile implements \JsonSerializable {
 	 * mutator method for profile activation token
 	 *
 	 * @param string $newProfileActivationToken new value of the profile activation token
-	 * @throws UnexpectedValueException if $newProfileActivationToken is not valid
+	 * @throws \InvalidArgumentException if the token is not a string or insecure
+	 * @throws \RangeException if the token is not exactly 32 characters
+	 * @throws \TypeError if the activation token is not a string
 	 **/
-	public function setProfileActivationToken($newProfileActivationToken) {
-		//verify the profile activation token is valid
-		$newProfileActivationToken = filter_var($newProfileActivationToken, FILTER_SANITIZE_STRING);
-		if($newProfileActivationToken === false) {
-			throw(new UnexpectedValueException("profile activation token is not a valid string"));
+	public function setProfileActivationToken(?string $newProfileActivationToken) : void {
+		if($newProfileActivationToken === null) {
+			$this->profileActivationToken = null;
+			return;
 		}
 
-		// store the profile activation token
+		//verify the profile activation token is valid
+		$newProfileActivationToken = strtolower(trim($newProfileActivationToken));
+		if(ctype_xdigit($newProfileActivationToken) === false) {
+			throw(new\RangeException("user activation token is not valid"));
+		}
+
+		// make sure the profile activation token is only 32 characters
+		if(strlen($newProfileActivationToken) !== 32) {
+			throw(new\RangeException("user activation token has to be 32"));
+		}
 		$this->profileActivationToken = $newProfileActivationToken;
 	}
 
@@ -174,7 +187,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile address
 	 **/
-	public function getProfileAddress() {
+	public function getProfileAddress() : string {
 		return ($this->profileAddress);
 	}
 
@@ -182,13 +195,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for profile address
 	 *
 	 * @param string $newProfileAddress
-	 * @throws UnexpectedValueException if $newProfileAddress is not valid
+	 * @throws \InvalidArgumentException if $newProfileAddress is not a string or insecure
+	 * @throws \RangeException if $newProfileAddress is > 32 characters
+	 * @throws \TypeError if $newProfileAddress is not a string
 	 **/
-	public function setProfileAddress($newProfileAddress) {
-		//verify the profile address is valid
-		$newProfileAddress = filter_var($newProfileAddress, FILTER_SANITIZE_STRING);
-		if($newProfileAddress === false) {
-			throw(new UnexpectedValueException("profile address is not a valid string"));
+	public function setProfileAddress(string $newProfileAddress) : void {
+		//verify the profile address is secure
+		$newProfileAddress = trim($newProfileAddress);
+		$newProfileAddress = filter_var($newProfileAddress, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileAddress) === true) {
+			throw(new \InvalidArgumentException("profile address is empty or insecure"));
+		}
+
+		//verify the profile address will fit in the database
+		if(strlen($newProfileAddress) > 32) {
+			throw(new \RangeException("profile address is too large"));
 		}
 
 		//store the profile address
@@ -197,23 +218,32 @@ class Profile implements \JsonSerializable {
 
 	/**
 	 * accessor method for profile avatar url
+	 *
+	 * @return string value of the avatar url
 	 **/
-	public function getProfileAvatarUrl() {
+	public function getProfileAvatarUrl() : string {
 		return ($this->profileAvatarUrl);
 	}
 
 	/**
 	 * mutator method for profile avatar url
 	 *
-	 * @param string $newProfileAvatarUrl
-	 * @throws UnexpectedValueException if $newProfileAvatarUrl is not valid
+	 * @param string $newProfileAvatarUrl new value of profile avatar url
+	 * @throws \InvalidArgumentException if $newProfileAvatarUrl is not a string or insecure
+	 * @throws \RangeException if $newProfileAvatarUrl is > 255 characters
+	 * @throws \TypeError if $newProfileAvatarUrl is not a string
 	 **/
-	public function setProfileAvatarUrl($newProfileAvatarUrl) {
-		//verify the profile avatar url is valid
-		$newProfileAvatarUrl = filter_var($newProfileAvatarUrl, FILTER_SANITIZE_STRING);
-		if($newProfileAvatarUrl === false) {
-			throw(new UnexpectedValueException("profile avatar url is not a valid string"));
+	public function setProfileAvatarUrl(string $newProfileAvatarUrl) : void {
+		$newProfileAvatarUrl = trim($newProfileAvatarUrl);
+		$newProfileAvatarUrl = filter_var($newProfileAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+		//verify the profile avatar url will fit in the database
+		if(strlen($newProfileAvatarUrl) > 255) {
+			throw(new \RangeException("image cloudinary content too large"));
 		}
+
+		//store the image cloudinary content
+		$this->profileAvatarUrl = $newProfileAvatarUrl;
 	}
 
 	/**
@@ -221,7 +251,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile bio
 	 **/
-	public function getProfileBio() {
+	public function getProfileBio() : string {
 		return ($this->profileBio);
 	}
 
@@ -229,13 +259,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile bio
 	 *
 	 * @param string $newProfileBio new value of profile bio
-	 * @throws UnexpectedValueException if $newProfileBio is not valid
+	 * @throws \InvalidArgumentException if $newProfileBio is not a string or insecure
+	 * @throws \RangeException if $newProfileBio is > 500 characters
+	 * @throws \TypeError if $newProfileBio is not a string
 	 **/
-	public function setProfileBio ($newProfileBio) {
-		//verify the profile bio is valid
-		$newProfileBio = filter_var($newProfileBio, FILTER_SANITIZE_STRING);
-		if($newProfileBio === false) {
-			throw(new UnexpectedValueException("profile bio is not a valid string"));
+	public function setProfileBio(string $newProfileBio) : void {
+		//verify the profile bio is secure
+		$newProfileBio = trim($newProfileBio);
+		$newProfileBio = filter_var($newProfileBio, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileBio) === true) {
+			throw(new \InvalidArgumentException("profile bio is empty or insecure"));
+		}
+
+		// verify the profile bio will fit in the database
+		if(strlen($newProfileBio) > 500) {
+			throw(new \RangeException("profile bio is too large"));
 		}
 
 		// store the profile bio
@@ -247,7 +285,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile city
 	 **/
-	public function getProfileCity() {
+	public function getProfileCity() : string {
 		return ($this->profileCity);
 	}
 
@@ -255,13 +293,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile city
 	 *
 	 * @param string $newProfileCity new value of profile city
-	 * @throws UnexpectedValueException if $newProfileCity is not valid
+	 * @throws \InvalidArgumentException if $newProfileCity is not a string or insecure
+	 * @throws \RangeException if $newProfileCity is > 3 characters
+	 * @throws \TypeError if $newProfileCity is not a string
 	 **/
-	public function setProfileCity($newProfileCity) {
-		// verify the profile city is valid
-		$newProfileCity = filter_var($newProfileCity, FILTER_SANITIZE_STRING);
-		if($newProfileCity === false) {
-			throw(new UnexpectedValueException("profile city is not a valid string"));
+	public function setProfileCity(string $newProfileCity) : void {
+		// verify the profile city is secure
+		$newProfileCity = trim($newProfileCity);
+		$newProfileCity = filter_var($newProfileCity, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileCity) === true) {
+			throw(new \InvalidArgumentException("profile city is empty or insecure"));
+		}
+
+		// verify the profile city will fit in the database
+		if(strlen($newProfileCity) > 3) {
+			throw(new \RangeException("profile city is too large"));
 		}
 
 		// store the profile city
@@ -273,21 +319,29 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile email
 	 **/
-	public function getProfileEmail() {
-		return ($this->profileEmail);
+	public function getProfileEmail() : string {
+		return $this->profileEmail;
 	}
 
 	/**
 	 * mutator method for profile email
 	 *
 	 * @param string $newProfileEmail new value of profile email
-	 * @throws UnexpectedValueException if $newProfileEmail is not valid
+	 * @throws \InvalidArgumentException if $newProfileEmail is not a valid email or insecure
+	 * @throws \RangeException if $newProfileEmail is > 128 characters
+	 * @throws \TypeError if $newProfileEmail is not a string
 	 **/
-	public function setProfileEmail($newProfileEmail) {
-		//verify the profile email is valid
-		$newProfileEmail = filter_var($newProfileEmail, FILTER_SANITIZE_EMAIL);
-		if($newProfileEmail === false) {
-			throw(new UnexpectedValueException("profile email is not a valid string"));
+	public function setProfileEmail(string $newProfileEmail) : void {
+		//verify the profile email is secure
+		$newProfileEmail = trim($newProfileEmail);
+		$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newProfileEmail) === true) {
+			throw(new \InvalidArgumentException("profile email is empty or insecure"));
+		}
+
+		// verify the profile email will fit in the database
+		if(strlen($newProfileEmail) > 128) {
+			throw(new \RangeException("profile email is too large"));
 		}
 
 		//store the profile email
@@ -297,23 +351,36 @@ class Profile implements \JsonSerializable {
 	/**
 	 * accessor method for profile hash
 	 *
-	 * @param string value of profile hash
+	 * @return string value of profile hash
 	 **/
-	public function getProfileHash() {
-		return ($this->profileHash);
+	public function getProfileHash() : string {
+		return $this->profileHash;
 	}
 
 	/**
 	 * mutator method for the profile hash
 	 *
 	 * @param string $newProfileHash new value of hash
-	 * @throws UnexpectedValueException if $newProfileHash is not valid
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 128 characters
+	 * @throws \TypeError if the profile hash is not a string
 	 **/
-	public function setProfileHash($newProfileHash) {
-		//verify the profile hash is valid
-		$newProfileHash = filter_var($newProfileHash, FILTER_SANITIZE_STRING);
-		if($newProfileHash === false) {
-			throw(new UnexpectedValueException("profile hash is not a valid string"));
+	public function setProfileHash(string $newProfileHash) : void {
+		// enforce that the hash is properly formatted
+		$newProfileHash = trim($newProfileHash);
+		if(empty($newProfileHash) === true) {
+			throw(new \InvalidArgumentException("profile hash is empty or insecure"));
+		}
+
+		// enforce the hash is really an Argon hash
+		$profileHashInfo = password_get_info($newProfileHash);
+		if($profileHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("profile hash is not a valid hash"));
+		}
+
+		// enforce that the hash is exactly 97 characters
+		if(strlen($newProfileHash) > 97) {
+			throw(new \RangeException("profile hash is too large"));
 		}
 
 		//store the profile hash
@@ -325,7 +392,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile name
 	 **/
-	public function getProfileName() {
+	public function getProfileName() : string {
 		return ($this->profileName);
 	}
 
@@ -333,13 +400,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile name
 	 *
 	 * @param string $newProfileName new value of profile name
-	 * @throws UnexpectedValueException if $newProfileName is not valid
+	 * @throws \InvalidArgumentException if $newProfileName is not a string or insecure
+	 * @throws \RangeException if $newProfileName is > 100 characters
+	 * @throws \TypeError if $newProfileName is not a string
 	 **/
-	public function setProfileName($newProfileName) {
-		//verify the profile name is valid
-		$newProfileName = filter_var($newProfileName, FILTER_SANITIZE_STRING);
-		if($newProfileName === false) {
-			throw(new UnexpectedValueException("profile name is not a valid string"));
+	public function setProfileName(string $newProfileName) : void {
+		//verify the profile name is secure
+		$newProfileName = trim($newProfileName);
+		$newProfileName = filter_var($newProfileName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileName) === true) {
+			throw(new \InvalidArgumentException("profile name is empty or insecure"));
+		}
+
+		// verify the profile name will fit in the database
+		if(strlen($newProfileName) > 100) {
+			throw(new \RangeException("profile name is too large"));
 		}
 
 		//store the profile name
@@ -351,7 +426,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile rank
 	 **/
-	public function getProfileRank() {
+	public function getProfileRank() : string {
 		return ($this->profileRank);
 	}
 
@@ -359,13 +434,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile rank
 	 *
 	 * @param string $newProfileRank new value of profile rank
-	 * @throws UnexpectedValueException if $newProfileRank is not valid
+	 * @throws \InvalidArgumentException if $newProfileRank is not a string or insecure
+	 * @throws \RangeException if $newProfileRank is > 32 characters
+	 * @throws \TypeError if $newProfileRank is not a string
 	 **/
-	public function setProfileRank($newProfileRank) {
-		//verify the profile rank is valid
-		$newProfileRank = filter_var($newProfileRank, FILTER_SANITIZE_STRING);
-		if($newProfileRank === false) {
-			throw(new UnexpectedValueException("profile rank is not a valid string"));
+	public function setProfileRank(string $newProfileRank) : void {
+		//verify the profile rank is secure
+		$newProfileRank = trim($newProfileRank);
+		$newProfileRank = filter_var($newProfileRank, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileRank) === true) {
+			throw(new \InvalidArgumentException("profile rank is empty or insecure"));
+		}
+
+		// verify the profile rank will fit in the database
+		if(strlen($newProfileRank) > 32) {
+			throw(new \RangeException("profile rank is too large"));
 		}
 
 		//store the profile rank
@@ -377,7 +460,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile state
 	 **/
-	public function getProfileState() {
+	public function getProfileState() : string {
 		return ($this->profileState);
 	}
 
@@ -385,13 +468,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile state
 	 *
 	 * @param string $newProfileState new value of profile state
-	 * @throws UnexpectedValueException if $newProfileState is not valid
+	 * @throws \InvalidArgumentException if $newProfileState is not a string or insecure
+	 * @throws \RangeException if $newProfileState is > 2 characters
+	 * @throws \TypeError if $newProfileState is not a string
 	 **/
-	public function setProfileState($newProfileState) {
-		//verify the profile state is valid
-		$newProfileState = filter_var($newProfileState, FILTER_SANITIZE_STRING);
-		if($newProfileState === false) {
-			throw(new UnexpectedValueException("profile state is not a valid string"));
+	public function setProfileState(string $newProfileState) : void {
+		//verify the profile state is secure
+		$newProfileState = trim($newProfileState);
+		$newProfileState = filter_var($newProfileState, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileState) === true) {
+			throw(new \InvalidArgumentException("profile state is empty or insecure"));
+		}
+
+		// verify the profile state will fit in the database
+		if(strlen($newProfileState) > 2) {
+			throw(new \RangeException("profile state is too large"));
 		}
 
 		// store the profile state
@@ -403,7 +494,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile type
 	 **/
-	public function getProfileType() {
+	public function getProfileType() : string {
 		return ($this->profileType);
 	}
 
@@ -411,13 +502,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile type
 	 *
 	 * @param string $newProfileType new value of profile type
-	 * @throws UnexpectedValueException if $newProfileType is not valid
+	 * @throws \InvalidArgumentException if $newProfileType is not a string or insecure
+	 * @throws \RangeException if $newProfileType is > 15 characters
+	 * @throws \TypeError if $newProfileType is not a string
 	 **/
-	public function setProfileType($newProfileType) {
-		//verify the profile type is valid
-		$newProfileType = filter_var($newProfileType, FILTER_SANITIZE_STRING);
-		if($newProfileType === false) {
-			throw(new UnexpectedValueException("profile type is not a valid string"));
+	public function setProfileType(string $newProfileType) : void {
+		//verify the profile type is secure
+		$newProfileType = trim($newProfileType);
+		$newProfileType = filter_var($newProfileType, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileType) === true) {
+			throw(new \InvalidArgumentException("profile type is empty or insecure"));
+		}
+
+		// verify the profile type will fit in the database
+		if(strlen($newProfileType) > 15) {
+			throw(new \RangeException("profile type is too large"));
 		}
 
 		// store the profile type
@@ -429,7 +528,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile username
 	 **/
-	public function getProfileUsername() {
+	public function getProfileUsername() : string {
 		return ($this->profileUsername);
 	}
 
@@ -437,13 +536,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile username
 	 *
 	 * @param string $newProfileUsername new value of profile username
-	 * @throws UnexpectedValueException if $newProfileUsername is not valid
+	 * @throws \InvalidArgumentException if $newProfileUsername is not a string or insecure
+	 * @throws \RangeException if $newProfileUsername is > 32 characters
+	 * @throws \TypeError if $newProfileUsername is not a string
 	 **/
-	public function setProfileUsername($newProfileUsername) {
-		// verify the profile username is valid
-		$newProfileUsername = filter_var($newProfileUsername, FILTER_SANITIZE_STRING);
-		if($newProfileUsername === false) {
-			throw(new UnexpectedValueException("profile username is not a valid string"));
+	public function setProfileUsername(string $newProfileUsername) : void {
+		// verify the profile username is secure
+		$newProfileUsername = trim($newProfileUsername);
+		$newProfileUsername = filter_var($newProfileUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileUsername) === true) {
+			throw(new \InvalidArgumentException("profile username is empty or insecure"));
+		}
+
+		// verify the profile username will fit in the database
+		if(strlen($newProfileUsername) > 32) {
+			throw(new \RangeException("profile username is too large"));
 		}
 
 		//store the profile username
@@ -455,7 +562,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return string value of profile zip
 	 **/
-	public function getProfileZip() {
+	public function getProfileZip() : string {
 		return ($this->profileUsername);
 	}
 
@@ -463,13 +570,21 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile zip
 	 *
 	 * @param string $newProfileZip new value of profile zip
-	 * @throws UnexpectedValueException if $newProfileZip is not valid
+	 * @throws \InvalidArgumentException if $newProfileZip is not a string or insecure
+	 * @throws \RangeException if $newProfileZip is > 5 to 9 characters
+	 * @throws \TypeError if $newProfileZip is not a string
 	 **/
-	public function setProfileZip($newProfileZip) {
-		//verify the profile zip is valid
-		$newProfileZip = filter_var($newProfileZip, FILTER_SANITIZE_STRING);
-		if($newProfileZip === false) {
-			throw(new UnexpectedValueException("profile zip is not a valid string"));
+	public function setProfileZip(string $newProfileZip) : void {
+		//verify the profile zip is secure
+		$newProfileZip = trim($newProfileZip);
+		$newProfileZip = filter_var($newProfileZip, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newProfileZip) === true) {
+			throw(new \InvalidArgumentException("profile zip is empty or insecure"));
+		}
+
+		// verify the profile zip will fit in the database
+		if(strlen($newProfileZip) > 9) {
+			throw(new \RangeException("profile zip is too large"));
 		}
 
 		//store the profile zip
@@ -532,7 +647,7 @@ class Profile implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		//bind the member variables to the place holder in the template
-		$parameters = ["profileId" => $this->profileId];
+		$parameters = ["profileId" => $this->profileId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -549,7 +664,7 @@ class Profile implements \JsonSerializable {
 		// sanitize the profileId before searching
 		try{
 			$profileId = self::validateUuid($profileId);
-		} catch(InvalidArgumentException\RangeException\Exception\TypeError $exception) {
+		} catch(InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
@@ -581,20 +696,20 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
-	 * get all profiles
+	 * get all soldier profiles
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @return \SplFixedArray SplFixedArray of profile found or null of not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getAllProfiles(\PDO $pdo) : \SplFixedArray {
+	public static function getAllSoldierProfiles(\PDO $pdo) : \SplFixedArray {
 		//create query template
-		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip";
+		$query = "SELECT FROM profile: profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
-		// build an array of profiles
+		// build an array of soldier profiles
 		$profiles = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
@@ -617,22 +732,9 @@ class Profile implements \JsonSerializable {
 	 */
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
-
 		$fields["profileId"] = $this->profileId->toString();
-
 		unset($fields["profileActivationToken"]);
-		unset($fields["profileAddress"]);
-		unset($fields["profileAvatarUrl"]);
-		unset($fields["profileBio"]);
-		unset($fields["profileCity"]);
-		unset($fields["profileEmail"]);
 		unset($fields["profileHash"]);
-		unset($fields["profileName"]);
-		unset($fields["profileRank"]);
-		unset($fields["profileState"]);
-		unset($fields["profileType"]);
-		unset($fields["profileUsername"]);
-		unset($fields["profileZip"]);
 		return($fields);
 	}
 }
