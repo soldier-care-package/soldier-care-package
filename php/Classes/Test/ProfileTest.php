@@ -3,6 +3,8 @@ namespace DeepDiveDylan\DataDesign\Test;
 
 use Deepdivedylan\DataDesign\{Profile, Tweet};
 
+require_once(dirname(__DIR__) . "/Test/SoldierCarePackageTest.php");
+
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
@@ -10,7 +12,7 @@ require_once(dirname(__DIR__) . "/autoload.php");
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
- * Full PHPUnit test for the Tweet class
+ * Full PHPUnit test for the Profile class
  *
  * This is a complete PHPUnit test of the Tweet class. It is complete because *ALL* mySQL/PDO enabled methods
  * are tested for both invalid and valid inputs.
@@ -18,7 +20,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
  * @see Tweet
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
-class TweetTest extends DataDesignTest {
+class ProfileTest extends SoldierCarePackageTest {
 	/**
 	 * Profile that created the Tweet; this is for foreign key relations
 	 * @var Profile profile
