@@ -705,7 +705,8 @@ class Profile implements \JsonSerializable {
 	 **/
 	public static function getAllSoldierProfiles(\PDO $pdo) : \SplFixedArray {
 		//create query template
-		$query = "SELECT FROM profile: profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip";
+		$query = "SELECT FROM profile: profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						WHERE profileType = :soldierProfile";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
