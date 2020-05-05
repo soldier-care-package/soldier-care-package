@@ -141,4 +141,55 @@ class RequestTest extends SoldierCarePackageTest {
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
 	}
+
+	/**
+	 * test creating a Request and then deleting it
+	 **/
+	public function testDeleteValidRequest() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("request");
+
+		// create a new Request and insert to into mySQL
+		$requestId = generateUuidV4();
+		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$request->insert($this->getPDO());
+
+		// delete the Request from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
+		$request->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Request does not exist
+		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId());
+		$this->assertNull($pdoRequest);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("request"));
+	}
+
+	/**
+	 * test inserting a Request and regrabbing it from mySQL
+	 **/
+	public function testGetValidRequestByRequestProfileId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("request");
+
+		// create a new Request and insert to into mySQL
+		$requestId = generateUuidV4();
+		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$request->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Request::getRequestByRequestProfileId($this->getPDO(), $request->getRequestProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
+
+		// grab the result from the array and validate it
+		$pdoRequest = $results[0];
+
+		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
+	}
+
 }
