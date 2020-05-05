@@ -1,5 +1,5 @@
 <?php
-namespace Cohort28SCP\SoldierCarePackage;
+namespace Cohort28SCP\SoldierCarePackage\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -28,7 +28,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
-abstract class DataDesignTest extends TestCase {
+abstract class SoldierCarePackageTest extends TestCase {
 	use TestCaseTrait;
 
 	/**
