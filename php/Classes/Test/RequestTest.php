@@ -1,7 +1,7 @@
 <?php
 namespace Cohort28SCP\SoldierCarePackage\Test;
 
-require_once("/lib/uuid.php");
+require_once(dirname(__DIR__,2) . "/lib/uuid.php");
 require_once(dirname(__DIR__) . "/autoload.php");
 
 use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
