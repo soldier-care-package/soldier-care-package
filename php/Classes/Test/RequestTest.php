@@ -7,12 +7,12 @@ require_once("configs.php");
 require_once(dirname(__DIR__) . "/autoload.php");
 
 use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
-/*
+
 // The pdo object has been created for you.
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 $secrets =  new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 $pdo = $secrets->getPdoObject();
-*/
+
 
 
 /**
@@ -73,10 +73,11 @@ class RequestTest extends SoldierCarePackageTest {
 	public final function setUp(): void {
 		// run the default setUp() method first
 		parent::setUp();
+
 		$password = "abc123";
 		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
-		// create and insert a Profile to own the test Tweet
+		// create and insert a Profile to own the test Request
 		$this->profile = new Profile(generateUuidV4(), null, "@handle", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_PROFILE_HASH, "testemail@gmail.com");
 		$this->profile->insert($this->getPDO());
 
@@ -101,7 +102,7 @@ class RequestTest extends SoldierCarePackageTest {
 
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
+		$requestId = generateUuidV4()->toString;
 		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
@@ -191,5 +192,38 @@ class RequestTest extends SoldierCarePackageTest {
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
 	}
+
+	//getRequestByRequestId
+
+	//getRequestByProfileId
+
+	//getAllRequests
+	/**
+	 * test grabbing all Tweets
+	 **/
+	public function testGetAllValidTweets() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("tweet");
+
+		// create a new Tweet and insert to into mySQL
+		$tweetId = generateUuidV4();
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
+		$tweet->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Tweet::getAllTweets($this->getPDO());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
+
+		// grab the result from the array and validate it
+		$pdoTweet = $results[0];
+		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
+		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
+	}
+
 
 }
