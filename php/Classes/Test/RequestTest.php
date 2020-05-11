@@ -56,7 +56,9 @@ class RequestTest extends SoldierCarePackageTest {
 
 	/**
 	 * create dependent objects before running each test
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public final function setUp(): void {
 		// run the default setUp() method first
 		parent::setUp();
@@ -89,7 +91,9 @@ class RequestTest extends SoldierCarePackageTest {
 
 	/**
 	 * test inserting a valid Request and verify that the actual mySQL data matches
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testInsertValidRequest() : void {
 
 
@@ -112,7 +116,9 @@ class RequestTest extends SoldierCarePackageTest {
 
 	/**
 	 * test inserting a Request, editing it, and then updating it
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testUpdateValidRequest(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("request");
@@ -138,7 +144,9 @@ class RequestTest extends SoldierCarePackageTest {
 
 	/**
 	 * test creating a Request and then deleting it
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testDeleteValidRequest() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("request");
@@ -160,7 +168,9 @@ class RequestTest extends SoldierCarePackageTest {
 
 	/**
 	 * test inserting a Request and regrabbing it from mySQL
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetValidRequestByRequestProfileId() {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("request");
@@ -187,9 +197,12 @@ class RequestTest extends SoldierCarePackageTest {
 	}
 
 	//getRequestByRequestId
+
 	/**
 	 * test grabbing a Request by RequestId
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetValidRequestByRequestId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("request");
@@ -218,10 +231,43 @@ class RequestTest extends SoldierCarePackageTest {
 
 	//getRequestByProfileId
 
+	/**
+	 * test grabbing a Request by request profile id
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidRequestByProfileId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("request");
+
+		// create a new Request and insert to into mySQL
+		$requestId = generateUuidV4();
+		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$request->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Request::getRequestByRequestProfileId($this->getPDO(), $requestId->getRequestProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
+
+		// grab the result from the array and validate it
+		$pdoRequest = $results[0];
+		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
+	}
+
 
 	/**
 	 * test grabbing all Requests
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetAllValidRequests() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("request");
