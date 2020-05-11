@@ -98,6 +98,29 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
 	}
 
+	/**
+	 * test inserting a Donation
+	 *
+	 * @throws \Exception
+	 */
+	public function testUpdateValidDonation(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("donation");
+
+		// create a new Donation and insert to into mySQL
+		$donationId = generateUuidV4();
+		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donation->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
+		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
+		$this->assertEquals($pdoDonation->getDonationProfileId()->toString(), $this->profile->getProfileId()->toString());
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
+	}
+
 
 
 
