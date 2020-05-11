@@ -187,6 +187,34 @@ class RequestTest extends SoldierCarePackageTest {
 	}
 
 	//getRequestByRequestId
+	/**
+	 * test grabbing a Request by RequestId
+	 **/
+	public function testGetValidRequestByRequestId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("request");
+
+		// create a new Request and insert to into mySQL
+		$requestId = generateUuidV4();
+		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$request->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
+
+		// grab the result from the array and validate it
+		$pdoRequest = $results[0];
+		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
+	}
 
 	//getRequestByProfileId
 
@@ -207,7 +235,7 @@ class RequestTest extends SoldierCarePackageTest {
 		$results = Request::getAllRequest($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage", $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
 
 		// grab the result from the array and validate it
 		$pdoRequest = $results[0];
