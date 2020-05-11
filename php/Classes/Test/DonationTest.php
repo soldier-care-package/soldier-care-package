@@ -99,29 +99,6 @@ class DonationTest extends SoldierCarePackageTest {
 	}
 
 	/**
-	 * test inserting a Donation
-	 *
-	 * @throws \Exception
-	 */
-	public function testUpdateValidDonation(): void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("donation");
-
-		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
-		$donation->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
-		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
-		$this->assertEquals($pdoDonation->getDonationProfileId()->toString(), $this->profile->getProfileId()->toString());
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
-	}
-
-	/**
 	 * test creating a Donation and then deleting it
 	 *
 	 * @throws \Exception
@@ -145,6 +122,34 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("donation"));
 	}
 
+	/**
+	 * test inserting a Donation and regrabbing it from mySQL
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidDonationByDonationProfileId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("donation");
+
+		// create a new Donation and insert to into mySQL
+		$donationId = generateUuidV4();
+		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donation->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Donation::getDonationByDonationProfileId($this->getPDO(), $donation->getDonationProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
+
+		// grab the result from the array and validate it
+		$pdoRequest = $results[0];
+
+		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
+	}
 
 
 
