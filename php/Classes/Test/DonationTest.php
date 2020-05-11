@@ -151,6 +151,35 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
 	}
 
+	/**
+	 * test grabbing a Donation by DonationId
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidDonationByDonationId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("donation");
+
+		// create a new Donation and insert to into mySQL
+		$donationId = generateUuidV4();
+		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donation->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
+
+		// grab the result from the array and validate it
+		$pdoDonation = $results[0];
+		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
+	}
 
 
 
