@@ -27,18 +27,18 @@ class DonationTest extends SoldierCarePackageTest {
 	protected $profile = null;
 
 	/**
-	 * timestamp of the request; this starts as null and is assigned later
-	 * @var \DateTime $VALID_REQUESTDATE
+	 * timestamp of the donation; this starts as null and is assigned later
+	 * @var \DateTime $VALID_DONATIONDATE
 	 **/
-	protected $VALID_REQUESTDATE = null;
+	protected $VALID_DONATIONDATE = null;
 
 	/**
-	 * Valid timestamp to use as sunriseRequestDate
+	 * Valid timestamp to use as sunriseDonationDate
 	 */
 	protected $VALID_SUNRISEDATE = null;
 
 	/**
-	 * Valid timestamp to use as sunsetRequestDate
+	 * Valid timestamp to use as sunsetDonationDate
 	 */
 	protected $VALID_SUNSETDATE = null;
 
@@ -64,7 +64,7 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
-		$this->VALID_REQUESTDATE = new \DateTime();
+		$this->VALID_DONATIONDATE = new \DateTime();
 
 		//format the sunrise date to use for testing
 		$this->VALID_SUNRISEDATE = new \DateTime();
@@ -75,6 +75,31 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->VALID_SUNSETDATE->add(new \DateInterval("P10D"));
 
 	}
+
+	/**
+	 * test inserting a valid Donation and verify that the actual mySQL data matches
+	 *
+	 * @throws \Exception
+	 */
+	public function testInsertValidDonation() : void {
+
+
+		// create a new Donation and insert to into mySQL
+		$donationId = generateUuidV4()->toString;
+		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
+		$donation->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId()->toString());
+
+		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId->toString());
+		$this->assertEquals($pdoDonation->getDonationProfileId(), $donation->getDonationProfileId()->toString());
+		//format the date too seconds since the beginning of time to avoid round off error
+		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
+	}
+
+
+
 
 
 
