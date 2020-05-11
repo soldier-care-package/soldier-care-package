@@ -121,6 +121,30 @@ class DonationTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
 	}
 
+	/**
+	 * test creating a Donation and then deleting it
+	 *
+	 * @throws \Exception
+	 */
+	public function testDeleteValidDonation() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("donation");
+
+		// create a new Donation and insert to into mySQL
+		$donationId = generateUuidV4();
+		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donation->insert($this->getPDO());
+
+		// delete the donation from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
+		$donation->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Request does not exist
+		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
+		$this->assertNull($pdoDonation);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("donation"));
+	}
+
 
 
 
