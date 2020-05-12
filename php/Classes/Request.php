@@ -205,7 +205,7 @@ class Request implements \JsonSerializable {
 		//bind the member variable to the place holders in the template
 		$formattedDate = $this->requestDate->format("Y-m-d H:i:s.u");
 		$parameters = ["requestId" => $this->requestId->getBytes(),
-			"requestProfileId" => $this->requestProfileId->getBytes(),
+			"requestProfileId" => $this->requestProfileId-> getBytes(),
 			"requestContent" => $this->requestContent,
 			"requestDate" => $formattedDate];
 
