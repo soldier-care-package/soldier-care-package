@@ -4,7 +4,7 @@ namespace Cohort28SCP\SoldierCarePackage\Test;
 require_once(dirname(__DIR__,2) . "/lib/uuid.php");
 require_once(dirname(__DIR__) . "/autoload.php");
 
-use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
+use Cohort28SCP\SoldierCarePackage\{ Profile, Donation};
 
 
 
@@ -52,15 +52,15 @@ class DonationTest extends SoldierCarePackageTest {
 		parent::setUp();
 
 		$password = "abc123";
-		$profileHash = VALID_PROFILE_HASH($password, PASSWORD_ARGON2I, ["time_cost" => 45]);
+		$profileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
 
 
 		// create and insert a Profile to own the test Donation
-		$this->profile = new Profile(generateUuidV4(), null, "@handle",
+		$this->profile = new Profile(generateUuidV4()->toString(), null, "",
 			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "this is the test bio.",
-			"Albuquerque", "testemail@gmail.com", "profileHash", "Charlie Miller",
-			"2nd class private", "NM", "Sender", "MillerC",
-			"87110" );
+			"", "testemail@gmail.com", $profileHash, "Charlie Miller",
+			"", "", "sender", "MillerC",
+			"" );
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
@@ -85,15 +85,15 @@ class DonationTest extends SoldierCarePackageTest {
 
 
 		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4()->toString;
+		$donationId = generateUuidV4()->toString();
 		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
 		$donation->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId()->toString());
 
-		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId->toString());
-		$this->assertEquals($pdoDonation->getDonationProfileId(), $donation->getDonationProfileId()->toString());
+		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationProfileId(), $donation->getDonationProfileId());
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
 	}
@@ -108,8 +108,8 @@ class DonationTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("donation");
 
 		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donationId = generateUuidV4()->toString();
+		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
 		$donation->insert($this->getPDO());
 
 		// delete the donation from mySQL
@@ -117,66 +117,61 @@ class DonationTest extends SoldierCarePackageTest {
 		$donation->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Request does not exist
-		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
+		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId()->toString());
 		$this->assertNull($pdoDonation);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("donation"));
 	}
 
+	//getDonationsByProfileId
 	/**
 	 * test inserting a Donation and regrabbing it from mySQL
 	 *
-	 * @param $pdoDonation
+	 *
 	 * @throws \Exception
 	 */
-	public function testGetValidDonationByDonationProfileId($pdoDonation) {
+	public function testGetValidDonationsByDonationProfileId() {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("donation");
 
 		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donationId = generateUuidV4()->toString();
+		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
 		$donation->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Donation::getDonationByDonationProfileId($this->getPDO(), $donation->getDonationProfileId());
+		$results = Donation::getDonationsByDonationProfileId($this->getPDO(), $donation->getDonationProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
 
 		// grab the result from the array and validate it
-		$pdoRequest = $results[0];
+		$pdoDonation = $results[0];
 
-		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId);
 		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
 	}
 
 	/**
-	 * test grabbing a Donation by DonationId
-	 *
-	 * @throws \Exception
-	 */
+//	 * test grabbing a Donation by DonationId
+//	 *
+//	 * @throws \Exception
+//	 */
 	public function testGetValidDonationByDonationId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("donation");
 
 		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donationId = generateUuidV4()->toString();
+		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
 		$donation->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId());
+		$pdoDonation = Donation::getDonationByDonationId($this->getPDO(), $donation->getDonationId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
-		$this->assertCount(1, $results);
 
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
-
-		// grab the result from the array and validate it
-		$pdoDonation = $results[0];
-		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId);
 		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
@@ -191,48 +186,19 @@ class DonationTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("donation");
 
 		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
+		$donationId = generateUuidV4()->toString();
+		$donation = new Donation($donationId, $this->profile->getProfileId()->toString(), $this->VALID_DONATIONDATE);
 		$donation->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Donation::getAllDonation($this->getPDO());
+		$results = Donation::getAllDonations($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
 
 		// grab the result from the array and validate it
 		$pdoDonation = $results[0];
-		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
-		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
-	}
-	/**
-	 * test grabbing a Donation by donation profile id
-	 *
-	 * @throws \Exception
-	 */
-	public function testGetValidDonationByProfileId() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("donation");
-
-		// create a new Donation and insert to into mySQL
-		$donationId = generateUuidV4();
-		$donation = new Donation($donationId, $this->profile->getProfileId(), $this->VALID_DONATIONDATE);
-		$donation->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$donation = Donation::getDonationByDonationProfileId($this->getPDO(), $donationId->getDonationProfileId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("donation"));
-		$this->assertCount(1, $donation);
-
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $donation);
-
-		// grab the result from the array and validate it
-		$pdoDonation = $donation[0];
-		$this->assertEquals($pdoDonation->getDonationId(), $donationId);
+		$this->assertEquals($pdoDonation->getDonationId()->toString(), $donationId);
 		$this->assertEquals($pdoDonation->getDonationProfileId(), $this->profile->getProfileId());
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoDonation->getDonationDate()->getTimestamp(), $this->VALID_DONATIONDATE->getTimestamp());
