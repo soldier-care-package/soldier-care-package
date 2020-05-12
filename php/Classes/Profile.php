@@ -694,6 +694,44 @@ class Profile implements \JsonSerializable {
 		return($profile);
 	}
 
+	/*
+ *
+ *  gets profile by Activation Token from mySQL
+	 * @param PDO $pdo PDO connection object
+	 * @param string $profileActivationToken
+	 * @return Profile
+ *
+ */
+	public static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
+		$profileActivationToken = trim($profileActivationToken);
+		if(ctype_xdigit($profileActivationToken) === false) {
+			throw(new \InvalidArgumentException("profile activation token is empty or in the wrong format"));
+		}
+		//create query template
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile WHERE profileId = :profileId";
+		//prepare query
+		$statement = $pdo->prepare($query);
+
+		//bind the object to their respective placeholders in the database
+		$parameters=["profileActivationToken"=>$profileActivationToken];
+		$statement->execute($parameters);
+
+		//grab profile from database
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !== false){
+			//instantiate profile and push data into it
+			$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAddress"],
+				$row["profileAvatarUrl"], $row["profileBio"], $row["profileCity"], $row["profileEmail"],
+				$row["profileHash"], $row["profileName"], $row["profileRank"], $row["profileState"],
+				$row["profileType"], $row["profileUsername"], $row["profileZip"]);
+		}
+		return ($profile);
+	}
+
 	/**
 	 * get all soldier profiles
 	 *
@@ -741,3 +779,4 @@ class Profile implements \JsonSerializable {
 		return($fields);
 	}
 }
+
