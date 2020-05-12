@@ -56,11 +56,11 @@ class DonationTest extends SoldierCarePackageTest {
 
 
 		// create and insert a Profile to own the test Donation
-		$this->profile = new Profile(generateUuidV4()->toString(), null, "",
+		$this->profile = new Profile(generateUuidV4()->toString(), null, "904 Park AVE",
 			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "this is the test bio.",
-			"", "testemail@gmail.com", $profileHash, "Charlie Miller",
-			"", "", "sender", "MillerC",
-			"" );
+			"ABQ", "testemail@gmail.com", $profileHash, "Charlie Miller",
+			"private", "NM", "sender", "MillerC",
+			"87110" );
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
