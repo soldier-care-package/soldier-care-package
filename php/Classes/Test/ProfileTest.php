@@ -4,7 +4,7 @@ namespace Cohort28SCP\SoldierCarePackage\Test;
 require_once(dirname(__DIR__,2) . "/lib/uuid.php");
 require_once(dirname(__DIR__) . "/autoload.php");
 
-use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
+use Cohort28SCP\SoldierCarePackage\{Profile};
 
 /**
  * Full PHPUnit test for the Profile class
@@ -15,7 +15,7 @@ use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
  * @see Profile
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
-class profileTest extends SoldierCarePackageTest {
+class ProfileTest extends SoldierCarePackageTest {
 	/**
 	 * Profile that created the class; this is for foreign key relations
 	 * @var Profile profile
@@ -106,58 +106,53 @@ class profileTest extends SoldierCarePackageTest {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
-		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
 
+		$this->VALID_PROFILE_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 
-		// create and insert a Profile to own the test Tweet
-		$this->profile = new Profile(\Ramsey\Uuid, string, string,string, string, string, string, string, string, string, string, string, string, string);
-		$this->profile->insert($this->getPDO());
+		$this->VALID_PROFILE_ADDRESS = "PSC 1234, Box 12345";
 
-		$this->VALID_PROFILE_ACTIVATION_TOKEN = new \String();
+		$this->VALID_PROFILE_AVATAR_URL = "https://i.picsum.photos/id/1025/4951/3301.jpg";
 
-		$this->VALID_PROFILE_ADDRESS = new \String();
+		$this->VALID_PROFILE_BIO = "The description of the bio";
 
-		$this->VALID_PROFILE_AVATAR_URL = new \String();
+		$this->VALID_PROFILE_CITY = "ABQ";
 
-		$this->VALID_PROFILE_BIO = new \String();
+		$this->VALID_PROFILE_EMAIL = "google52@gmail.com";
 
-		$this->VALID_PROFILE_CITY = new \String();
+		$this->VALID_PROFILE_NAME = "Chris";
 
-		$this->VALID_PROFILE_EMAIL = new \String();
+		$this->VALID_PROFILE_RANK = "Private";
 
-		$this->VALID_PROFILE_HASH = new \String();
+		$this->VALID_PROFILE_STATE = "NM";
 
-		$this->VALID_PROFILE_NAME = new \String();
+		$this->VALID_PROFILE_TYPE = "Soldier";
 
-		$this->VALID_PROFILE_RANK = new \String();
+		$this->VALID_PROFILE_USERNAME = "ChrisNM";
 
-		$this->VALID_PROFILE_STATE = new \String();
-
-		$this->VALID_PROFILE_TYPE = new \String();
-
-		$this->VALID_PROFILE_USERNAME = new \String();
-
-		$this->VALID_PROFILE_ZIP = new \String();
+		$this->VALID_PROFILE_ZIP = "87121";
 
 	}
 
 	/**
 	 * test inserting a valid Profile and verify that the actual mySQL data matches
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testInsertValidProfile() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->profile->getProfileId(), $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
+		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -181,8 +176,8 @@ class profileTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->profile->getProfileId(), $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
 		// edit the Profile and update it in mySQL
@@ -202,10 +197,10 @@ class profileTest extends SoldierCarePackageTest {
 		$profile->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
+		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertEquals($pdoProfile->getProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -224,14 +219,16 @@ class profileTest extends SoldierCarePackageTest {
 
 	/**
 	 * test creating a Profile and then deleting it
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testDeleteValidProfile() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->profile->getProfileId(), $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
 		// delete the Profile from mySQL
@@ -239,34 +236,31 @@ class profileTest extends SoldierCarePackageTest {
 		$profile->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Profile does not exist
-		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
+		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertNull($pdoProfile);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("profile"));
 	}
 
 	/**
 	 * test inserting a Profile and regrabbing it from mySQL
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetValidProfileByProfileId() {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->profile->getProfileId(), $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId());
+		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Profile", $results);
-
-		// grab the result from the array and validate it
-		$pdoProfile = $results[0];
 
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -284,66 +278,70 @@ class profileTest extends SoldierCarePackageTest {
 
 	/**
 	 * test grabbing a Profile by activation token
-	 **/
-	public function testGetValidProfileByProfileActivationToken() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("profile");
-
-		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN->getProfileActivationToken(), $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
-		$profile->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Profile::getProfileByProfileActivationToken($this->getPDO(), $profile->getProfileActivationToken());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertCount(1, $results);
-
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Profile", $results);
-
-		// grab the result from the array and validate it
-		$pdoProfile = $results[0];
-		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileByProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
-		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
-		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
-		$this->assertEquals($pdoProfile->getProfileBio(), $this->VALID_PROFILE_BIO);
-		$this->assertEquals($pdoProfile->getProfileCity(), $this->VALID_PROFILE_CITY);
-		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_PROFILE_EMAIL);
-		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_PROFILE_HASH);
-		$this->assertEquals($pdoProfile->getProfileName(), $this->VALID_PROFILE_NAME);
-		$this->assertEquals($pdoProfile->getProfileRank(), $this->VALID_PROFILE_RANK);
-		$this->assertEquals($pdoProfile->getProfileState(), $this->VALID_PROFILE_STATE);
-		$this->assertEquals($pdoProfile->getProfileType(), $this->VALID_PROFILE_TYPE);
-		$this->assertEquals($pdoProfile->getProfileUsername(), $this->VALID_PROFILE_USERNAME);
-		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
-	}
+	 *
+	 * @throws \Exception
+	 */
+//	public function testGetValidProfileByProfileActivationToken() : void {
+//		// count the number of rows and save it for later
+//		$numRows = $this->getConnection()->getRowCount("profile");
+//
+//		// create a new Profile and insert to into mySQL
+//		$profileId = generateUuidV4()->toString();
+//		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+//		$profile->insert($this->getPDO());
+//
+//		// grab the data from mySQL and enforce the fields match our expectations
+//		$results = Profile::getProfileByProfileActivationToken($this->getPDO(), $profile->getProfileActivationToken());
+//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
+//		$this->assertCount(1, $results);
+//
+//		// enforce no other objects are bleeding into the test
+//		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Profile", $results);
+//
+//		// grab the result from the array and validate it
+//		$pdoProfile = $results[0];
+//		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
+//		$this->assertEquals($pdoProfile->getProfileByProfileId(), $profile->getProfileId()->toString());
+//		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
+//		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
+//		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
+//		$this->assertEquals($pdoProfile->getProfileBio(), $this->VALID_PROFILE_BIO);
+//		$this->assertEquals($pdoProfile->getProfileCity(), $this->VALID_PROFILE_CITY);
+//		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_PROFILE_EMAIL);
+//		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_PROFILE_HASH);
+//		$this->assertEquals($pdoProfile->getProfileName(), $this->VALID_PROFILE_NAME);
+//		$this->assertEquals($pdoProfile->getProfileRank(), $this->VALID_PROFILE_RANK);
+//		$this->assertEquals($pdoProfile->getProfileState(), $this->VALID_PROFILE_STATE);
+//		$this->assertEquals($pdoProfile->getProfileType(), $this->VALID_PROFILE_TYPE);
+//		$this->assertEquals($pdoProfile->getProfileUsername(), $this->VALID_PROFILE_USERNAME);
+//		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
+//	}
 
 	/**
 	 * test grabbing all soldier profiles
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetAllValidSoldierProfiles() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
-		$profile = new Tweet($profileId, $this->profile->getProfileId(), $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_TYPE);
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Profile::getAllSoldierProfiles($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Profile", $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Profile", $results);
 
 		// grab the result from the array and validate it
 		$pdoProfile = $results[0];
-		$this->assertEquals($pdoProfile->getTweetId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoProfile->getProfileAcitvationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
+		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
+		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
+		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
 		$this->assertEquals($pdoProfile->getProfileBio(), $this->VALID_PROFILE_BIO);
