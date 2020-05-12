@@ -291,17 +291,12 @@ class ProfileTest extends SoldierCarePackageTest {
 		$profile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Profile::getProfileByProfileActivationToken($this->getPDO(), $profile->getProfileActivationToken());
+		$pdoProfile = Profile::getProfileByProfileActivationToken($this->getPDO(), $profile->getProfileActivationToken());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertCount(1, $results);
-
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Profile", $results);
 
 		// grab the result from the array and validate it
-		$pdoProfile = $results[0];
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileByProfileId(), $profile->getProfileId()->toString());
+		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -356,3 +351,4 @@ class ProfileTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
 	}
 }
+

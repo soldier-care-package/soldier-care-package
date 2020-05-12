@@ -694,14 +694,12 @@ class Profile implements \JsonSerializable {
 		return($profile);
 	}
 
-	/*
- *
- *  gets profile by Activation Token from mySQL
-	 * @param PDO $pdo PDO connection object
+	/**
+	 * @param \PDO $pdo
 	 * @param string $profileActivationToken
-	 * @return Profile
- *
- */
+	 * @return Profile|null
+	 * @throws \Exception
+	 **/
 	public static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
 		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
 		$profileActivationToken = trim($profileActivationToken);
@@ -710,12 +708,11 @@ class Profile implements \JsonSerializable {
 		}
 		//create query template
 		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
-						FROM profile WHERE profileId = :profileId";
+						FROM profile 
+						WHERE profileActivationToken = :profileActivationToken";
 		//prepare query
 		$statement = $pdo->prepare($query);
-
-		//bind the object to their respective placeholders in the database
-		$parameters=["profileActivationToken"=>$profileActivationToken];
+		$parameters = ["profileActivationToken" => $profileActivationToken];
 		$statement->execute($parameters);
 
 		//grab profile from database
