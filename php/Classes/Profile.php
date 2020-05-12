@@ -5,8 +5,7 @@ namespace Cohort28SCP\SoldierCarePackage;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use InvalidArgumentException\RangeException\Exception\TypeError;
-use Ramsey\Uuid;
+use Ramsey\Uuid\Uuid;
 /**
  * Classes for the profile table
  *
@@ -119,7 +118,7 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
-	 *  accesor method for profile id
+	 *  accessor method for profile id
 	 *
 	 * @return uuid value of profile id or null of new Profile
 	 **/
@@ -563,7 +562,7 @@ class Profile implements \JsonSerializable {
 	 * @return string value of profile zip
 	 **/
 	public function getProfileZip() : string {
-		return ($this->profileUsername);
+		return ($this->profileZip);
 	}
 
 	/**
@@ -664,7 +663,7 @@ class Profile implements \JsonSerializable {
 		// sanitize the profileId before searching
 		try{
 			$profileId = self::validateUuid($profileId);
-		} catch(InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
@@ -705,10 +704,13 @@ class Profile implements \JsonSerializable {
 	 **/
 	public static function getAllSoldierProfiles(\PDO $pdo) : \SplFixedArray {
 		//create query template
-		$query = "SELECT FROM profile: profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+		$soldierProfile = "soldier";
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile;
 						WHERE profileType = :soldierProfile";
 		$statement = $pdo->prepare($query);
-		$statement->execute();
+		$parameters = ["soldierProfile" => $soldierProfile];
+		$statement->execute($parameters);
 
 		// build an array of soldier profiles
 		$profiles = new \SplFixedArray($statement->rowCount());
