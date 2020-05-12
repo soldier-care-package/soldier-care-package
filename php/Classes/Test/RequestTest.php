@@ -64,15 +64,15 @@ class RequestTest extends SoldierCarePackageTest {
 		parent::setUp();
 
 		$password = "abc123";
-		$profileHash = VALID_PROFILE_HASH($password, PASSWORD_ARGON2I, ["time_cost" => 45]);
+		$profileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
 
 
 		// create and insert a Profile to own the test Request
-		$this->profile = new Profile(generateUuidV4(), null, "@handle",
+		$this->profile = new Profile(generateUuidV4()->toString(), null, "@handle",
 			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "this is the test bio.",
-			"Albuquerque", "testemail@gmail.com", "profileHash", "Lilly Poblano",
-			"2nd class private", "NM", "Soldier", "LillyP",
-			"87110" );
+			"APO", "testemail@gmail.com", $profileHash, "Lilly Poblano",
+			"2nd class private", "NM", "soldier", "LillyP",
+			"87110");
 		$this->profile->insert($this->getPDO());
 
 		// calculate the date (just use the time the unit test was setup...)
@@ -98,7 +98,7 @@ class RequestTest extends SoldierCarePackageTest {
 
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4()->toString;
+		$requestId = generateUuidV4()->toString();
 		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT,
 			$this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
@@ -106,7 +106,7 @@ class RequestTest extends SoldierCarePackageTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId()->toString());
 
-		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId->toString());
+		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId);
 		$this->assertEquals($pdoRequest->getRequestProfileId(), $request->getRequestProfileId()->toString());
 		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
@@ -124,8 +124,8 @@ class RequestTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("request");
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$requestId = generateUuidV4()->toString();
+		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
 		// edit the Request and update it in mySQL
@@ -133,8 +133,8 @@ class RequestTest extends SoldierCarePackageTest {
 		$request->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId());
-		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId()->toString());
+		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
 		$this->assertEquals($pdoRequest->getRequestProfileId()->toString(), $this->profile->getProfileId()->toString());
 		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT2);
@@ -152,8 +152,8 @@ class RequestTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("request");
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$requestId = generateUuidV4()->toString();
+		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
 		// delete the Request from mySQL
@@ -161,13 +161,15 @@ class RequestTest extends SoldierCarePackageTest {
 		$request->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Request does not exist
-		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId());
+		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId()->toString());
 		$this->assertNull($pdoRequest);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("request"));
 	}
 
+	//	//getRequestByProfileId
 	/**
 	 * test inserting a Request and regrabbing it from mySQL
+	 *
 	 *
 	 * @throws \Exception
 	 */
@@ -176,20 +178,20 @@ class RequestTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("request");
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$requestId = generateUuidV4()->toString();
+		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Request::getRequestByRequestProfileId($this->getPDO(), $request->getRequestProfileId());
+		$results = Request::getRequestByRequestProfileId($this->getPDO(), $request->getRequestProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
 
 		// grab the result from the array and validate it
 		$pdoRequest = $results[0];
 
-		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId);
 		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
@@ -208,60 +210,23 @@ class RequestTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("request");
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$requestId = generateUuidV4()->toString();
+		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId());
+		$pdoRequest = Request::getRequestByRequestId($this->getPDO(), $request->getRequestId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
-		$this->assertCount(1, $results);
 
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
 
 		// grab the result from the array and validate it
-		$pdoRequest = $results[0];
-		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+
+		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId);
 		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
 		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
 	}
-
-	//getRequestByProfileId
-
-	/**
-	 * test grabbing a Request by request profile id
-	 *
-	 * @throws \Exception
-	 */
-	public function testGetValidRequestByProfileId() : void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("request");
-
-		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
-		$request->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Request::getRequestByRequestProfileId($this->getPDO(), $requestId->getRequestProfileId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
-		$this->assertCount(1, $results);
-
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
-
-		// grab the result from the array and validate it
-		$pdoRequest = $results[0];
-		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
-		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
-		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
-	}
-
 
 	/**
 	 * test grabbing all Requests
@@ -273,19 +238,19 @@ class RequestTest extends SoldierCarePackageTest {
 		$numRows = $this->getConnection()->getRowCount("request");
 
 		// create a new Request and insert to into mySQL
-		$requestId = generateUuidV4();
-		$request = new Request($requestId, $this->profile->getProfileId(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
+		$requestId = generateUuidV4()->toString();
+		$request = new Request($requestId, $this->profile->getProfileId()->toString(), $this->VALID_REQUESTCONTENT, $this->VALID_REQUESTDATE);
 		$request->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Request::getAllRequest($this->getPDO());
+		$results = Request::getAllRequests($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Request", $results);
 
 		// grab the result from the array and validate it
 		$pdoRequest = $results[0];
-		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
+		$this->assertEquals($pdoRequest->getRequestId()->toString(), $requestId);
 		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
 		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
 		//format the date too seconds since the beginning of time to avoid round off error
