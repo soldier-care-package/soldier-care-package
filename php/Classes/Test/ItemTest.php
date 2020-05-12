@@ -54,14 +54,14 @@ class ItemTest extends SoldierCarePackageTest {
 		parent::setUp();
 
 		$password = "abc123";
-		$profileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 45]);
+		$profileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
 
 
 		// create and insert a Profile to own the test Test
-		$this->profile = new Profile(generateUuidV4(), null, "@handle",
+		$this->profile = new Profile(generateUuidV4()->toString(), null, "@handle",
 			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "this is the test bio.",
-			"Albuquerque", "testemail@gmail.com", "profileHash", "Lilly Poblano",
-			"2nd class private", "NM", "Soldier", "LillyP",
+			"APO", "testemail@gmail.com", $profileHash, "Lilly Poblano",
+			"2nd class private", "AE", "soldier", "LillyP",
 			"87110");
 		$this->profile->insert($this->getPDO());
 
@@ -76,13 +76,12 @@ class ItemTest extends SoldierCarePackageTest {
 
 
 		// create a new Item and insert to into mySQL
-		$itemId = generateUuidV4()->toString;
+		$itemId = generateUuidV4()->toString();
 		$item = new Item($itemId, $this->donation->getDonationId()->toString(), $this->request->getRequestId()->toString(), $this->VALID_TRACKING_NUMBER, $this->VALID_URL);
 		$item->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoItem = Item::getItemByItemId($this->getPDO(), $item->getItemId()->toString());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("item"));
 		$this->assertEquals($pdoItem->getItemId(), $itemId);
 		$this->assertEquals($pdoItem->getItemDonationId(), $this-> donation->getDonationId()->toString());
 		$this->assertEquals($pdoItem->getItemRequestId(), $this->request->getRequestId()->toString());
@@ -140,35 +139,88 @@ class ItemTest extends SoldierCarePackageTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("item"));
 	}
 
-//	/**
-//	 * test inserting a Item and regrabbing it from mySQL
-//	 *
-//	 * @throws \Exception
-//	 */
-//	public function testGetValidItemByItemProfileId() {
-//		// count the number of rows and save it for later
-//		$numRows = $this->getConnection()->getRowCount("item");
-//
-//		// create a new Item and insert to into mySQL
-//		$itemId = generateUuidV4();
-//		$item = new Item($itemId, $this->donation->getDonationId(), $this->request->getRequestId(), $this->VALID_TRACKING_NUMBER, $this->VALID_URL);
-//		$item->insert($this->getPDO());
-//
-//		// grab the data from mySQL and enforce the fields match our expectations
-//		$item = Item::getItemByItemProfileId($this->getPDO(), $request->getRequestProfileId());
-//		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("request"));
-//		$this->assertCount(1, $results);
-//		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
-//
-//		// grab the result from the array and validate it
-//		$pdoRequest = $results[0];
-//
-//		$this->assertEquals($pdoRequest->getRequestId(), $requestId);
-//		$this->assertEquals($pdoRequest->getRequestProfileId(), $this->profile->getProfileId());
-//		$this->assertEquals($pdoRequest->getRequestContent(), $this->VALID_REQUESTCONTENT);
-//		//format the date too seconds since the beginning of time to avoid round off error
-//		$this->assertEquals($pdoRequest->getRequestDate()->getTimestamp(), $this->VALID_REQUESTDATE->getTimestamp());
-//	}
-//
-//
+	//fixes //no profileId?
+	//get item by requestId
+	/**
+	 * test inserting a Item and regrabbing it from mySQL
+	 *
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidItemsByItemRequestId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("Item");
+
+		// create a new Item and insert to into mySQL
+		$itemId = generateUuidV4()->toString();
+		$item = new Item($itemId, $this->donation->getDonationId()->toSting(), $this->request->getReqeustId()->toString(),
+			$this->VALID_TRACKING_NUMBER, $this->VALID_URL);
+		$item->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Item::getItemsByItemRequestId($this->getPDO(), $item->getItemRequestId()->toString());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("item"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
+
+		// grab the result from the array and validate it
+		$pdoItem = $results[0];
+
+		$this->assertEquals($pdoItem->getItemId()->toString(), $itemId);
+		$this->assertEquals($pdoItem->getRequestId(), $this->request->getRequestId());
+	}
+
+	/**
+	//	 * test grabbing a Item by ItemId
+	//	 *
+	//	 * @throws \Exception
+	//	 */
+	public function testGetValidItemByItemId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("item");
+
+		// create a new Item and insert to into mySQL
+		$itemId = generateUuidV4()->toString();
+		$item = new Item($itemId, $this->donation->getDonationId()->toSting(), $this->request->getReqeustId()->toString(),
+			$this->VALID_TRACKING_NUMBER, $this->VALID_URL);
+		$item->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoItem = Item::getItemByItemId($this->getPDO(), $item->getItemId()->toString());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("item"));
+
+		$this->assertEquals($pdoItem->getItemId()->toString(), $itemId);
+		$this->assertEquals($pdoItem->getItemRequestId(), $this->request->getRequestId());
+	}
+
+	/**
+	 * test grabing Item by Donation id
+	 *
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidItemsByItemDonationId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("Item");
+
+		// create a new Item and insert to into mySQL
+		$itemId = generateUuidV4()->toString();
+		$item = new Item($itemId, $this->donation->getDonationId()->toSting(), $this->request->getReqeustId()->toString(),
+			$this->VALID_TRACKING_NUMBER, $this->VALID_URL);
+		$item->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Item::getItemsByItemDonationId($this->getPDO(), $item->getItemDonationId()->toString());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("item"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Cohort28SCP\\SoldierCarePackage\\Donation", $results);
+
+		// grab the result from the array and validate it
+		$pdoItem = $results[0];
+
+		$this->assertEquals($pdoItem->getItemId()->toString(), $itemId);
+		$this->assertEquals($pdoItem->getDonationId(), $this->request->getDonationId());
+	}
+
+
 }
