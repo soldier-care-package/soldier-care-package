@@ -43,7 +43,7 @@ class Donation implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newDonationId, $newDonationProfileId, $newDonationDate = null) {
+	public function __construct(string $newDonationId, string $newDonationProfileId,  $newDonationDate = null) {
 		try {
 			$this->setDonationId($newDonationId);
 			$this->setDonationProfileId($newDonationProfileId);
@@ -68,8 +68,10 @@ class Donation implements \JsonSerializable {
 	 * mutator method for donation id
 	 *
 	 * @param Uuid|string $newDonationId new value of donation id
+	 * @throws \InvalidArgumentException
 	 * @throws \RangeException if $newDonationId is not positive
-	 * @throws \TypeError if $newDonationId is not a uuid or string
+	 * @throws \Exception
+	 *  @throws \TypeError if $newDonationId is not a uuid or string
 	 **/
 	public function setDonationId($newDonationId): void {
 		try {
@@ -123,6 +125,7 @@ class Donation implements \JsonSerializable {
 	 * @param \DateTime|string|null $newDonationDate donation date as a DateTime object or string (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newDonationDate is not a valid object or string
 	 * @throws \RangeException if $newDonationDate is a date that does not exist
+	 * @throws \Exception
 	 **/
 
 	public function setDonationDate($newDonationDate = null): void {

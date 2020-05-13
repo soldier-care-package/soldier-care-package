@@ -114,10 +114,12 @@ class Item implements \JsonSerializable {
 	 * mutator method for item donation id
 	 *
 	 * @param Uuid|string $newItemDonationId new value of item donation id
+	 * @param \InvalidArgumentException
 	 * @throws \RangeException if $newItemDonationId is not positive
+	 * @throws \Exception
 	 * @throws \TypeError if $newItemDonationId is not a uuid or string
 	 **/
-	public function setItemDonationId( $newItemDonationId) : void {
+	public function setItemDonationId($newItemDonationId) : void {
 		try {
 			$uuid = self::validateUuid($newItemDonationId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {

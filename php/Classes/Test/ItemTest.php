@@ -73,11 +73,11 @@ class ItemTest extends SoldierCarePackageTest {
 		$this->soldierProfile->insert($this->getPDO());
 
 	//create a sender profile
-		$this->senderProfile = new Profile($senderProfileId, null, "904 Park AVE",
+		$this->senderProfile = new Profile($senderProfileId, null, "",
 			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "this is the test bio.",
-			"ABQ", "testemail@gmail.com", $profileHash, "Charlie Miller",
-			"private", "NM", "sender", "MillerC",
-			"87110" );
+			"", "testemail@gmail.com", $profileHash, "Charlie Miller",
+			"", "", "sender", "MillerC",
+			"" );
 		$this->senderProfile->insert($this->getPDO());
 //det up for request
 		$this->request = new Request(generateUuidV4()->toString(), $soldierProfileId,
