@@ -110,6 +110,7 @@ class Profile implements \JsonSerializable {
 			$this->setProfileType($newProfileType);
 			$this->setProfileUsername($newProfileUsername);
 			$this->setProfileZip($newProfileZip);
+
 		} catch(\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
@@ -133,7 +134,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if the profile Id is not valid
 	 **/
-	public function setProfileId($newProfileId) : void {
+	public function setProfileId($newProfileId): void {
 		try {
 			$uuid = self::validateUuid($newProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -198,7 +199,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileAddress is > 32 characters
 	 * @throws \TypeError if $newProfileAddress is not a string
 	 **/
-	public function setProfileAddress(string $newProfileAddress) : void {
+	public function setProfileAddress($newProfileAddress) : void {
 		//verify the profile address is secure
 		$newProfileAddress = trim($newProfileAddress);
 		$newProfileAddress = filter_var($newProfileAddress, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -695,6 +696,41 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
+	 * @param \PDO $pdo
+	 * @param string $profileActivationToken
+	 * @return Profile|null
+	 * @throws \Exception
+	 **/
+	public static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
+		$profileActivationToken = trim($profileActivationToken);
+		if(ctype_xdigit($profileActivationToken) === false) {
+			throw(new \InvalidArgumentException("profile activation token is empty or in the wrong format"));
+		}
+		//create query template
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile 
+						WHERE profileActivationToken = :profileActivationToken";
+		//prepare query
+		$statement = $pdo->prepare($query);
+		$parameters = ["profileActivationToken" => $profileActivationToken];
+		$statement->execute($parameters);
+
+		//grab profile from database
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !== false){
+			//instantiate profile and push data into it
+			$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAddress"],
+				$row["profileAvatarUrl"], $row["profileBio"], $row["profileCity"], $row["profileEmail"],
+				$row["profileHash"], $row["profileName"], $row["profileRank"], $row["profileState"],
+				$row["profileType"], $row["profileUsername"], $row["profileZip"]);
+		}
+		return ($profile);
+	}
+
+	/**
 	 * get all soldier profiles
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -706,7 +742,7 @@ class Profile implements \JsonSerializable {
 		//create query template
 		$soldierProfile = "soldier";
 		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
-						FROM profile;
+						FROM profile
 						WHERE profileType = :soldierProfile";
 		$statement = $pdo->prepare($query);
 		$parameters = ["soldierProfile" => $soldierProfile];
