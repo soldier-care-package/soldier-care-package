@@ -110,13 +110,13 @@ class ProfileTest extends SoldierCarePackageTest {
 
 		$this->VALID_PROFILE_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 
-		$this->VALID_PROFILE_ADDRESS = "PSC 1234, Box 12345";
+		$this->VALID_PROFILE_ADDRESS = "PSC 1234 Box 12345";
 
 		$this->VALID_PROFILE_AVATAR_URL = "https://i.picsum.photos/id/1025/4951/3301.jpg";
 
 		$this->VALID_PROFILE_BIO = "The description of the bio";
 
-		$this->VALID_PROFILE_CITY = "ABQ";
+		$this->VALID_PROFILE_CITY = "APO";
 
 		$this->VALID_PROFILE_EMAIL = "google52@gmail.com";
 
@@ -126,7 +126,7 @@ class ProfileTest extends SoldierCarePackageTest {
 
 		$this->VALID_PROFILE_STATE = "NM";
 
-		$this->VALID_PROFILE_TYPE = "Soldier";
+		$this->VALID_PROFILE_TYPE = "soldier";
 
 		$this->VALID_PROFILE_USERNAME = "ChrisNM";
 
@@ -170,7 +170,9 @@ class ProfileTest extends SoldierCarePackageTest {
 
 	/**
 	 * test inserting a Profile, editing it, and then updating it
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testUpdateValidProfile() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
@@ -351,4 +353,3 @@ class ProfileTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
 	}
 }
-

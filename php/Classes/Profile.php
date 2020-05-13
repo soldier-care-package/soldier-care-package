@@ -110,6 +110,7 @@ class Profile implements \JsonSerializable {
 			$this->setProfileType($newProfileType);
 			$this->setProfileUsername($newProfileUsername);
 			$this->setProfileZip($newProfileZip);
+
 		} catch(\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
@@ -133,7 +134,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if the profile Id is not valid
 	 **/
-	public function setProfileId($newProfileId) : void {
+	public function setProfileId($newProfileId): void {
 		try {
 			$uuid = self::validateUuid($newProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -198,7 +199,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileAddress is > 32 characters
 	 * @throws \TypeError if $newProfileAddress is not a string
 	 **/
-	public function setProfileAddress(string $newProfileAddress) : void {
+	public function setProfileAddress($newProfileAddress) : void {
 		//verify the profile address is secure
 		$newProfileAddress = trim($newProfileAddress);
 		$newProfileAddress = filter_var($newProfileAddress, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -741,7 +742,7 @@ class Profile implements \JsonSerializable {
 		//create query template
 		$soldierProfile = "soldier";
 		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
-						FROM profile;
+						FROM profile
 						WHERE profileType = :soldierProfile";
 		$statement = $pdo->prepare($query);
 		$parameters = ["soldierProfile" => $soldierProfile];
@@ -776,4 +777,3 @@ class Profile implements \JsonSerializable {
 		return($fields);
 	}
 }
-
