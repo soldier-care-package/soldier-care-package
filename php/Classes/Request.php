@@ -58,7 +58,7 @@ class Request implements \JsonSerializable {
 		try {
 			$this->setRequestId($newRequestId);
 			$this->setRequestProfileId($newRequestProfileId);
-			$this->setRequstContent($newRequestContent);
+			$this->setRequestContent($newRequestContent);
 			$this->setRequestDate($newRequestDate);
 		}
 			//determine what exception type was thrown
@@ -91,7 +91,7 @@ class Request implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		//convert and store the request id
-		$this->RequestId = $uuid;
+		$this->requestId = $uuid;
 	}
 
 	/**
@@ -196,7 +196,8 @@ class Request implements \JsonSerializable {
 	 **/
 	public function insert(\PDO $pdo) : void {
 		//query template
-		$query = "INSERT INTO request(requestId, requestProfileId, requestContent, requestDate) VALUES(:requestId, :requestProfileId, :requestDate)";
+		$query = "INSERT INTO request(requestId, requestProfileId, requestContent, requestDate) 
+					VALUES(:requestId, :requestProfileId, :requestContent, :requestDate)";
 
 		//send the statement to PDO so it knows what to do.
 		$statement = $pdo->prepare($query);
@@ -204,7 +205,7 @@ class Request implements \JsonSerializable {
 		//bind the member variable to the place holders in the template
 		$formattedDate = $this->requestDate->format("Y-m-d H:i:s.u");
 		$parameters = ["requestId" => $this->requestId->getBytes(),
-			"requestProfileId" => $this->requestProfileId->getBytes(),
+			"requestProfileId" => $this->requestProfileId-> getBytes(),
 			"requestContent" => $this->requestContent,
 			"requestDate" => $formattedDate];
 
@@ -321,7 +322,7 @@ class Request implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try{
-				$request = new Request($row["requestId"], $row["requestProfileId"], $row["requestContent"], $row["donationDate"]);
+				$request = new Request($row["requestId"], $row["requestProfileId"], $row["requestContent"], $row["requestDate"]);
 				$requests[$requests->key()] = $request;
 				$requests->next();
 			} catch(\Exception $exception) {

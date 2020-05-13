@@ -1,5 +1,5 @@
 <?php
-namespace Cohort28SCP\SoldierCarePackage;
+namespace Cohort28SCP\SoldierCarePackage\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -8,7 +8,7 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 // grab the encrypted properties file
-require_once("/etc/apache2/capstone-mysql/Secret.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
@@ -28,7 +28,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
-abstract class DataDesignTest extends TestCase {
+abstract class SoldierCarePackageTest extends TestCase {
 	use TestCaseTrait;
 
 	/**
@@ -89,7 +89,7 @@ abstract class DataDesignTest extends TestCase {
 			// connect to mySQL and provide the interface to PHPUnit
 
 
-			$secrets =  new Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}

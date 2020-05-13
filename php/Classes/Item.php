@@ -114,10 +114,12 @@ class Item implements \JsonSerializable {
 	 * mutator method for item donation id
 	 *
 	 * @param Uuid|string $newItemDonationId new value of item donation id
+	 * @param \InvalidArgumentException
 	 * @throws \RangeException if $newItemDonationId is not positive
+	 * @throws \Exception
 	 * @throws \TypeError if $newItemDonationId is not a uuid or string
 	 **/
-	public function setItemDonationId( $newItemDonationId) : void {
+	public function setItemDonationId($newItemDonationId) : void {
 		try {
 			$uuid = self::validateUuid($newItemDonationId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -166,13 +168,11 @@ class Item implements \JsonSerializable {
 	 * @throws \RangeException if $newItemTrackingNumber is > 40 characters
 	 * @throws \TypeError if $newItemTrackingNumber is not a string
 	 **/
-	public function setItemTrackingNumber( string  $newItemTrackingNumber) : void {
+	public function setItemTrackingNumber( $newItemTrackingNumber) : void {
 		//verify the item tracking number is secure
 		$newItemTrackingNumber = trim($newItemTrackingNumber);
 		$newItemTrackingNumber= filter_var($newItemTrackingNumber, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newItemTrackingNumber) === true) {
-			throw(new \InvalidArgumentException("item tracking number is empty or insecure"));
-		}
+
 		//verify the item tracking number will fit in tbe database
 		if(strlen($newItemTrackingNumber) > 40){
 			throw(new\RangeException("item tracking number is too large"));
@@ -247,26 +247,26 @@ class Item implements \JsonSerializable {
 	 * @throws \PDOException whn mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function update(\PDO $pdo) : void {
-
-		//create query template
-		$query = "UPDATE item
-					SET itemId = :itemId, itemDonationId = :itemDonationId, itemRequestId = :itemRequestId, itemTrackingNumber = :itemTrackingNumber, itemUrl = :itemUrl
-					WHERE itemId = :itemId";
-
-		//prepare a statement using the SQL so PDO knows what to do.
-		$statement = $pdo->prepare($query);
-
-		// bind the member variables to the place holders in in the template
-		$parameters = ["itemId" => $this->itemId->getBytes(),
-			"itemDonationId" => $this->itemDonationId->getBytes(),
-			"itemRequestId" => $this->itemRequestId->getBytes(),
-			"itemTrackingNumber" => $this->itemTrackingNumber,
-			"itemUrl" => $this->itemUrl];
-
-		//now execute he statement on the database
-		$statement->execute($parameters);
-	}
+//	public function update(\PDO $pdo) : void {
+//
+//		//create query template
+//		$query = "UPDATE item
+//					SET itemId = :itemId, itemDonationId = :itemDonationId, itemRequestId = :itemRequestId, itemTrackingNumber = :itemTrackingNumber, itemUrl = :itemUrl
+//					WHERE itemId = :itemId";
+//
+//		//prepare a statement using the SQL so PDO knows what to do.
+//		$statement = $pdo->prepare($query);
+//
+//		// bind the member variables to the place holders in in the template
+//		$parameters = ["itemId" => $this->itemId->getBytes(),
+//			"itemDonationId" => $this->itemDonationId->getBytes(),
+//			"itemRequestId" => $this->itemRequestId->getBytes(),
+//			"itemTrackingNumber" => $this->itemTrackingNumber,
+//			"itemUrl" => $this->itemUrl];
+//
+//		//now execute he statement on the database
+//		$statement->execute($parameters);
+//	}
 
 	/**
 	 * deletes this item from mySQL
@@ -348,7 +348,7 @@ class Item implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber FROM item WHERE itemRequestId = :itemRequestId";
+		$query = "SELECT itemId, itemDonationId, itemRequestId, itemTrackingNumber, itemUrl FROM item WHERE itemRequestId = :itemRequestId";
 		$statement = $pdo->prepare($query);
 		// bind the item request id to the place holder in the template
 		$parameters = ["itemRequestId" => $itemRequestId->getBytes()];
@@ -378,7 +378,7 @@ class Item implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getItemsByDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
+	public static function getItemsByItemDonationId(\PDO $pdo, $itemDonationId) : \SplFixedArray {
 
 		try {
 			$itemDonationId = self::validateUuid($itemDonationId);

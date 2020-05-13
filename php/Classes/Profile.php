@@ -5,8 +5,7 @@ namespace Cohort28SCP\SoldierCarePackage;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use InvalidArgumentException\RangeException\Exception\TypeError;
-use Ramsey\Uuid;
+use Ramsey\Uuid\Uuid;
 /**
  * Classes for the profile table
  *
@@ -78,7 +77,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @param Uuid $newProfileId new profile id
 	 * @param string $newProfileActivationToken new profile activation token
-	 * @param string $newProfileAddress new profile address
+	 * @param string|null $newProfileAddress new profile address
 	 * @param string $newProfileAvatarUrl new profile avatar url
 	 * @param string $newProfileBio new profile bio
 	 * @param string $newProfileCity new profile city
@@ -90,7 +89,7 @@ class Profile implements \JsonSerializable {
 	 * @param string $newProfileType new profile type
 	 * @param string $newProfileUsername new profile username
 	 * @param string $newProfileZip new profile zip
-	 * @throws \InvalidArgumentException if data types are not valid
+
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \TypeError if a data type violates a data hint
 	 * @throws \Exception if some other exception occurs
@@ -111,7 +110,8 @@ class Profile implements \JsonSerializable {
 			$this->setProfileType($newProfileType);
 			$this->setProfileUsername($newProfileUsername);
 			$this->setProfileZip($newProfileZip);
-		} catch(\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
+
+		} catch(\RangeException | \TypeError | \Exception $exception) {
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -119,7 +119,7 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
-	 *  accesor method for profile id
+	 *  accessor method for profile id
 	 *
 	 * @return uuid value of profile id or null of new Profile
 	 **/
@@ -134,7 +134,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newProfileId is not positive
 	 * @throws \TypeError if the profile Id is not valid
 	 **/
-	public function setProfileId($newProfileId) : void {
+	public function setProfileId($newProfileId): void {
 		try {
 			$uuid = self::validateUuid($newProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -195,16 +195,16 @@ class Profile implements \JsonSerializable {
 	 * mutator method for profile address
 	 *
 	 * @param string $newProfileAddress
-	 * @throws \InvalidArgumentException if $newProfileAddress is not a string or insecure
+
 	 * @throws \RangeException if $newProfileAddress is > 32 characters
 	 * @throws \TypeError if $newProfileAddress is not a string
 	 **/
-	public function setProfileAddress(string $newProfileAddress) : void {
+	public function setProfileAddress($newProfileAddress) : void {
 		//verify the profile address is secure
 		$newProfileAddress = trim($newProfileAddress);
 		$newProfileAddress = filter_var($newProfileAddress, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileAddress) === true) {
-			throw(new \InvalidArgumentException("profile address is empty or insecure"));
+//			throw(new \InvalidArgumentException("profile address is empty or insecure"));
 		}
 
 		//verify the profile address will fit in the database
@@ -293,16 +293,16 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile city
 	 *
 	 * @param string $newProfileCity new value of profile city
-	 * @throws \InvalidArgumentException if $newProfileCity is not a string or insecure
 	 * @throws \RangeException if $newProfileCity is > 3 characters
 	 * @throws \TypeError if $newProfileCity is not a string
 	 **/
+//* @throws \InvalidArgumentException if $newProfileCity is not a string or insecure
 	public function setProfileCity(string $newProfileCity) : void {
 		// verify the profile city is secure
 		$newProfileCity = trim($newProfileCity);
 		$newProfileCity = filter_var($newProfileCity, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileCity) === true) {
-			throw(new \InvalidArgumentException("profile city is empty or insecure"));
+//			throw(new \InvalidArgumentException("profile city is empty or insecure"));
 		}
 
 		// verify the profile city will fit in the database
@@ -434,7 +434,6 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile rank
 	 *
 	 * @param string $newProfileRank new value of profile rank
-	 * @throws \InvalidArgumentException if $newProfileRank is not a string or insecure
 	 * @throws \RangeException if $newProfileRank is > 32 characters
 	 * @throws \TypeError if $newProfileRank is not a string
 	 **/
@@ -443,7 +442,7 @@ class Profile implements \JsonSerializable {
 		$newProfileRank = trim($newProfileRank);
 		$newProfileRank = filter_var($newProfileRank, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileRank) === true) {
-			throw(new \InvalidArgumentException("profile rank is empty or insecure"));
+//			throw(new \InvalidArgumentException("profile rank is empty or insecure"));
 		}
 
 		// verify the profile rank will fit in the database
@@ -468,7 +467,7 @@ class Profile implements \JsonSerializable {
 	 * mutator method for the profile state
 	 *
 	 * @param string $newProfileState new value of profile state
-	 * @throws \InvalidArgumentException if $newProfileState is not a string or insecure
+
 	 * @throws \RangeException if $newProfileState is > 2 characters
 	 * @throws \TypeError if $newProfileState is not a string
 	 **/
@@ -477,7 +476,7 @@ class Profile implements \JsonSerializable {
 		$newProfileState = trim($newProfileState);
 		$newProfileState = filter_var($newProfileState, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileState) === true) {
-			throw(new \InvalidArgumentException("profile state is empty or insecure"));
+//			throw(new \InvalidArgumentException("profile state is empty or insecure"));
 		}
 
 		// verify the profile state will fit in the database
@@ -563,14 +562,14 @@ class Profile implements \JsonSerializable {
 	 * @return string value of profile zip
 	 **/
 	public function getProfileZip() : string {
-		return ($this->profileUsername);
+		return ($this->profileZip);
 	}
 
 	/**
 	 * mutator method for the profile zip
 	 *
 	 * @param string $newProfileZip new value of profile zip
-	 * @throws \InvalidArgumentException if $newProfileZip is not a string or insecure
+
 	 * @throws \RangeException if $newProfileZip is > 5 to 9 characters
 	 * @throws \TypeError if $newProfileZip is not a string
 	 **/
@@ -579,7 +578,7 @@ class Profile implements \JsonSerializable {
 		$newProfileZip = trim($newProfileZip);
 		$newProfileZip = filter_var($newProfileZip, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileZip) === true) {
-			throw(new \InvalidArgumentException("profile zip is empty or insecure"));
+//			throw(new \InvalidArgumentException("profile zip is empty or insecure"));
 		}
 
 		// verify the profile zip will fit in the database
@@ -664,7 +663,7 @@ class Profile implements \JsonSerializable {
 		// sanitize the profileId before searching
 		try{
 			$profileId = self::validateUuid($profileId);
-		} catch(InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
@@ -696,6 +695,41 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
+	 * @param \PDO $pdo
+	 * @param string $profileActivationToken
+	 * @return Profile|null
+	 * @throws \Exception
+	 **/
+	public static function getProfileByProfileActivationToken(\PDO $pdo, string $profileActivationToken): ?Profile{
+		//make sure activation token is in the right format and that it is a string representation of a hexadecimal
+		$profileActivationToken = trim($profileActivationToken);
+		if(ctype_xdigit($profileActivationToken) === false) {
+			throw(new \InvalidArgumentException("profile activation token is empty or in the wrong format"));
+		}
+		//create query template
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile 
+						WHERE profileActivationToken = :profileActivationToken";
+		//prepare query
+		$statement = $pdo->prepare($query);
+		$parameters = ["profileActivationToken" => $profileActivationToken];
+		$statement->execute($parameters);
+
+		//grab profile from database
+		$profile = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !== false){
+			//instantiate profile and push data into it
+			$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAddress"],
+				$row["profileAvatarUrl"], $row["profileBio"], $row["profileCity"], $row["profileEmail"],
+				$row["profileHash"], $row["profileName"], $row["profileRank"], $row["profileState"],
+				$row["profileType"], $row["profileUsername"], $row["profileZip"]);
+		}
+		return ($profile);
+	}
+
+	/**
 	 * get all soldier profiles
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -705,10 +739,13 @@ class Profile implements \JsonSerializable {
 	 **/
 	public static function getAllSoldierProfiles(\PDO $pdo) : \SplFixedArray {
 		//create query template
-		$query = "SELECT FROM profile: profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+		$soldierProfile = "soldier";
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile
 						WHERE profileType = :soldierProfile";
 		$statement = $pdo->prepare($query);
-		$statement->execute();
+		$parameters = ["soldierProfile" => $soldierProfile];
+		$statement->execute($parameters);
 
 		// build an array of soldier profiles
 		$profiles = new \SplFixedArray($statement->rowCount());
