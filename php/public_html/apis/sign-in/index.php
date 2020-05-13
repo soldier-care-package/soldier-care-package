@@ -29,5 +29,37 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 		// determine which HTTP method is being used
 		$method = array_key_exists("HTTP_X_HTTP_MEHTOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_MEHTOD"] : $_SERVER["REQUEST_METHOD"];
 
-		// If method
+		// If method is post, handle the sign in logic
+		if($method === "POST") {
+
+			// Make sure the XSRF token is valid
+			verifyXsrf();
+
+			// Process the request content and decode the json object into a php object
+			$requestContent = file_get_contents("php://input");
+			$requestObject = json_decode($requestContent);
+
+			// Check to make sure the password and email field is not empty
+			if(empty($requestObject->profileEmail) === true) {
+				throw(new \InvalidArgumentException("Email address not provided", 401));
+			} else {
+				$profileEmail =filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
+			}
+
+			if(empty($requestObject->profilePassword) === true) {
+				throw(new \InvalidArgumentException("Must enter a password", 401));
+			} else {
+				$profilePassword = $requestObject->profilePassword;
+			}
+
+			// grab the profile from the database by the email provided
+			$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
+			if(empty($profile) === true) {
+				throw(new \InvalidArgumentException("Invalid email", 401));
+			}
+			$profile->setProfileActivationToken(null);
+			$profile->update($pdo);
+
+
+		}
 	}
