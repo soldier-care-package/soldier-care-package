@@ -7,13 +7,11 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 
-use Cohort28SCP\SoldierCarePackage\{Profile};
+use Cohort28SCP\SoldierCarePackage\{Profile, Request};
 
 /**
  * Cloudinary API for Images
  *
- * @author Marty Bonacci
- * @version 1.0
  */
 
 // start session
@@ -29,14 +27,14 @@ $reply->data = null;
 try {
 
 	// Grab the MySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 	$pdo = $secrets->getPdoObject();
 	$cloudinary = $secrets->getSecret("cloudinary");
 
 	//determine which HTTP method is being used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
-	$tweetId = filter_input(INPUT_GET, "imageTweetId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$requestId = filter_input(INPUT_GET, "imageRequestId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$profileId = filter_input(INPUT_GET, "profileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -55,7 +53,7 @@ try {
 		verifyXsrf();
 
 		//use $_POST super global to grab the needed Id
-		$tweetId = filter_input(INPUT_POST, "tweetId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$requestId = filter_input(INPUT_POST, "requestId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 		// assigning variable to the user profile, add image extension
 		$tempUserFileName = $_FILES["image"]["tmp_name"];
@@ -64,7 +62,7 @@ try {
 		$cloudinaryResult = \Cloudinary\Uploader::upload($tempUserFileName, array("width" => 200, "crop" => "scale"));
 
 		// after sending the image to Cloudinary, create a new image
-		$image = new Image(generateUuidV4(), $tweetId, $cloudinaryResult["signature"], $cloudinaryResult["secure_url"]);
+		$image = new Image(generateUuidV4(), $requestId, $cloudinaryResult["signature"], $cloudinaryResult["secure_url"]);
 		$image->insert($pdo);
 		// update reply
 		$reply->message = "Image uploaded Ok";
