@@ -76,5 +76,19 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 				"profileUsername" =>$profile->getProfileUsername()
 			];
 
+			// Create and set the JWT Token
+			setJwtAndAuthHeader("auth", $authObject);
+
+			$reply->message = "Sign in was successful";
+		} else {
+			throw(new \InvalidArgumentException("Invalid HTTP method request", 418));
 		}
+
+		// If an exception is thrown update
+	} catch(Exception | TypeError $exception) {
+		$reply->status = $exception->getCode();
+		$reply->message = $exception->getMessage();
 	}
+	header("Content-type: application/json");
+	echo json_encode($reply);
+
