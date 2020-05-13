@@ -60,6 +60,21 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			$profile->setProfileActivationToken(null);
 			$profile->update($pdo);
 
+			// Verify that the hash is correct
+			if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
+				throw(new \InvalidArgumentException("Password or email is incorrect", 401));
+			}
+
+			// Grab profile from database and put into a session
+			$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+
+			$_SESSION["profile"] = $profile;
+
+			// Create the Auth payload
+			$authObject = (object) [
+				"profileId" =>$profile->getProfileId(),
+				"profileUsername" =>$profile->getProfileUsername()
+			];
 
 		}
 	}
