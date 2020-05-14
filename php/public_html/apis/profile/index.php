@@ -24,7 +24,7 @@ $reply->status = 200;
 $reply->data = null;
 try{
 	// Grab the mySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+	$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 	$pdo = $secrets->getPdoObjects();
 
 	// Determine which HTTP method was used
@@ -61,7 +61,7 @@ try{
 
 		// Enforce the user is signed in and only trying to edit their own profile
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $id) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+			throw(new InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 
 		validateJwtHeader();
@@ -78,12 +78,12 @@ try{
 
 		// Profile Username
 		if(empty($requestObject->profileUsername) === true) {
-			throw(new \InvalidArgumentException("No profile username", 405));
+			throw(new InvalidArgumentException("No profile username", 405));
 		}
 
 		// Profile email is a required field
 		if(empty($requestObject->profileEmail) === true) {
-			throw(new \InvalidArgumentException("No profile email present", 405));
+			throw(new InvalidArgumentException("No profile email present", 405));
 		}
 
 		//profile phone # | if null use the profile phone that is in the database
@@ -114,7 +114,7 @@ try{
 
 		// Enforce the user is signed in and only trying to edit their own profile
 		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()->toString()) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+			throw(new InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
 
 		validateJwtHeader();
@@ -127,7 +127,7 @@ try{
 		throw(new InvalidArgumentException("Invalid HTTP Request", 400));
 	}
 	// Catch any exceptions that were thrown and update the status and message state variable fields
-} catch(\Exception | \TypeError $exception) {
+} catch(Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 }

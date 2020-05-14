@@ -23,7 +23,7 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			session_start();
 		}
 		// grab mySQL statement
-		$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+		$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 		$pdo = $secrets->getPdoObjects();
 
 		// determine which HTTP method is being used
@@ -41,13 +41,13 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 
 			// Check to make sure the password and email field is not empty
 			if(empty($requestObject->profileEmail) === true) {
-				throw(new \InvalidArgumentException("Email address not provided", 401));
+				throw(new InvalidArgumentException("Email address not provided", 401));
 			} else {
 				$profileEmail =filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 			}
 
 			if(empty($requestObject->profilePassword) === true) {
-				throw(new \InvalidArgumentException("Must enter a password", 401));
+				throw(new InvalidArgumentException("Must enter a password", 401));
 			} else {
 				$profilePassword = $requestObject->profilePassword;
 			}
@@ -55,14 +55,14 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			// grab the profile from the database by the email provided
 			$profile = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 			if(empty($profile) === true) {
-				throw(new \InvalidArgumentException("Invalid email", 401));
+				throw(new InvalidArgumentException("Invalid email", 401));
 			}
 			$profile->setProfileActivationToken(null);
 			$profile->update($pdo);
 
 			// Verify that the hash is correct
 			if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
-				throw(new \InvalidArgumentException("Password or email is incorrect", 401));
+				throw(new InvalidArgumentException("Password or email is incorrect", 401));
 			}
 
 			// Grab profile from database and put into a session
@@ -81,7 +81,7 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 
 			$reply->message = "Sign in was successful";
 		} else {
-			throw(new \InvalidArgumentException("Invalid HTTP method request", 418));
+			throw(new InvalidArgumentException("Invalid HTTP method request", 418));
 		}
 
 		// If an exception is thrown update

@@ -23,7 +23,7 @@ $reply->data = null;
 try {
 
 	// Grab the mySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+	$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 	$pdo = $secrets->getPdoObjects();
 
 	//determine which HTTP method was used
