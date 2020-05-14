@@ -37,5 +37,13 @@ try {
 		throw(new \InvalidArgumentException("Activation has an incorrect length", 405));
 	}
 
+	// Verify that the activation token is a string value of a hexadecimal
+	if(ctype_xdigit($activation) === false) {
+		throw(new \InvalidArgumentException("Activation is empty or has invalid contents", 405));
+	}
 
+	// Handle the GET HTTP request
+	if($method === "GET") {
+
+	}
 }
