@@ -20,3 +20,29 @@ if(session_status() !== PHP_SESSION_ACTIVE) {
 $reply = new stdClass();
 $reply->status = 200;
 $reply->data = null;
+try {
+
+	// Grab the mySQL connection
+
+	//determine which HTTP method was used
+	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	if($method === "GET") {
+		$_SESSION = [];
+		$reply->message = "You are now signed out";
+	} else {
+		throw(new \InvalidArgumentException("Invalid HTTP method request"));
+	}
+
+} catch(Exception $exception) {
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
+} catch(TypeError $typeError) {
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
+}
+
+header("Content-type: application/json");
+if($reply->data === null) {
+	unset($reply->data);
+}
+echo json_encode($reply);
