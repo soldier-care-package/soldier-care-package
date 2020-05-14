@@ -64,7 +64,16 @@ try {
 				$profile->update($pdo);
 
 				// Set the reply for the end user
+				$reply->data = "Thank you for activating your account, you will be auto-redirected to your profile shortly.";
 			}
+		} else {
+			// Throw an exception if the activation token does not exist
+			throw(new RuntimeException("Profile with this activation code does not exist", 404));
 		}
+	} else {
+		// Throw an exception if the HTTP request is not a GET
+		throw(new \InvalidArgumentException("Invalid HTTP method request", 403));
 	}
+
+
 }
