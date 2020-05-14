@@ -23,7 +23,6 @@ $reply->data = null;
 try {
 
 	// Grab the mySQL connection
-	// Grab the mySQL connection
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
 	$pdo = $secrets->getPdoObjects();
 
@@ -36,6 +35,7 @@ try {
 		throw(new InvalidArgumentException("Invalid HTTP method request"));
 	}
 
+	// Catch any exceptions that were thrown
 } catch(Exception $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
@@ -48,4 +48,6 @@ header("Content-type: application/json");
 if($reply->data === null) {
 	unset($reply->data);
 }
+
+// Encode and return reply to front end caller
 echo json_encode($reply);
