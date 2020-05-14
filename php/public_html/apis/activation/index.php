@@ -54,6 +54,17 @@ try {
 		// Verify the profile is not null
 		if($profile !== null) {
 
+			// Make sure the activation token matches
+			if($activation === $profile->getProfileActivationToken()) {
+
+				// Set activation to null
+				$profile->setProfileActivationToken(null);
+
+				// Update the profile in the database
+				$profile->update($pdo);
+
+				// Set the reply for the end user
+			}
 		}
 	}
 }
