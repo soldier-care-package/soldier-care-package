@@ -71,6 +71,48 @@ try{
 			throw(new RuntimeException("Profile does not exist", 404));
 		}
 
+		// Profile Username
+		if(empty($requestObject->profileUsername) === true) {
+			throw(new \InvalidArgumentException("No profile username", 405));
+		}
+
+		// Profile email is a required field
+		if(empty($requestObject->profileEmail) === true) {
+			throw(new \InvalidArgumentException("No profile email present", 405));
+		}
+
+		//profile phone # | if null use the profile phone that is in the database
+//		if(empty($requestObject->profilePhone) === true) {
+//			$requestObject->ProfilePhone = $profile->getProfilePhone();
+//		}
+
+		$profile->setProfileUsername($requestObject->profileUsername);
+		$profile->setProfileEmail($requestObject->profileEmail);
+//		$profile->setProfilePhone($requestObject->profilePhone);
+		$profile->update($pdo);
+
+		// Update reply
+		$reply->message = "Profile information updated";
+
+	} else if($method === "DELETE") {
+
+		// Verify the XSRF token
+		verifyXsrf();
+
+		//enforce the end user has a JWT token
+		//validateJwtHeader();
+
+		$profile = Profile::getProfileByProfileId($pdo, $id);
+		if($profile === null) {
+			throw(new RuntimeException("Profile does not exist"));
+		}
+
+		// Enforce the user is signed in and only trying to edit their own profile
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()->toString()) {
+			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		}
+
+		validateJwtHeader();
 
 	}
 }
