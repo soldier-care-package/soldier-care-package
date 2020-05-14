@@ -27,4 +27,15 @@ try {
 	$pdo = $secrets->getPdoObjects();
 
 	// Check the HTTP method being used
+	$method = array_key_exists("HTTP_X_HTTP_METHOD, $_SERVER") ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+
+	// Sanitize input
+	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
+
+	// Make sure the activation token is the correct size
+	if(strlen($activation) !== 32) {
+		throw(new \InvalidArgumentException("Activation has an incorrect length", 405));
+	}
+
+
 }
