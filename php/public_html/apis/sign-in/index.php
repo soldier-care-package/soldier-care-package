@@ -23,7 +23,7 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			session_start();
 		}
 		// grab mySQL statement
-		$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 		$pdo = $secrets->getPdoObjects();
 
 		// determine which HTTP method is being used
@@ -90,5 +90,6 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 		$reply->message = $exception->getMessage();
 	}
 	header("Content-type: application/json");
+	// Encode and return reply to front end caller
 	echo json_encode($reply);
 

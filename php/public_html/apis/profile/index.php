@@ -1,6 +1,11 @@
 <?php
 
-//require_once
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/lib/jwt.php";
+require_once dirname(__DIR__, 3) . "/lib/uuid.php";
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 use Cohort28SCP\SoldierCarePackage\Profile;
 
@@ -19,7 +24,7 @@ $reply->status = 200;
 $reply->data = null;
 try{
 	// Grab the mySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 	$pdo = $secrets->getPdoObjects();
 
 	// Determine which HTTP method was used
