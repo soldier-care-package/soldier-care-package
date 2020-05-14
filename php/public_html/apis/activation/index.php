@@ -45,5 +45,15 @@ try {
 	// Handle the GET HTTP request
 	if($method === "GET") {
 
+		// Set XSRF Cookie
+		setXsrfCookie();
+
+		// Find profile associated with the activation token
+		$profile = Profile::getProfileByProfileActivationToken($pdo, $activation);
+
+		// Verify the profile is not null
+		if($profile !== null) {
+
+		}
 	}
 }
