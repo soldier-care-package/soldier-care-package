@@ -23,6 +23,9 @@ $reply->data = null;
 try {
 
 	// Grab the mySQL connection
+	// Grab the mySQL connection
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$pdo = $secrets->getPdoObjects();
 
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -30,7 +33,7 @@ try {
 		$_SESSION = [];
 		$reply->message = "You are now signed out";
 	} else {
-		throw(new \InvalidArgumentException("Invalid HTTP method request"));
+		throw(new InvalidArgumentException("Invalid HTTP method request"));
 	}
 
 } catch(Exception $exception) {
