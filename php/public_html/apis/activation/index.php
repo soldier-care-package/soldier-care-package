@@ -89,3 +89,6 @@ header("Content-type: application/json");
 if($reply->data === null) {
 	unset($reply->data);
 }
+
+// Encode and return reply to front end caller
+echo json_encode($reply);
