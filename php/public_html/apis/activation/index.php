@@ -83,3 +83,9 @@ try {
 	$reply->status = $typeError->getCode();
 	$reply->message = $typeError->getMessage();
 }
+
+// Prepare and send the reply
+header("Content-type: application/json");
+if($reply->data === null) {
+	unset($reply->data);
+}
