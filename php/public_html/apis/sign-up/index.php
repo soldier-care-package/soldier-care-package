@@ -4,7 +4,7 @@ require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
+
 
 use Cohort28SCP\SoldierCarePackage\Profile;
 
@@ -39,6 +39,20 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
+		//profile Name is a required field
+		if(empty($requestObject->profileName) === true) {
+			throw(new \InvalidArgumentException ("No profile name present", 405));
+		}
+
+		//profile Username is a required field
+		if(empty($requestObject->profileUsername) === true) {
+			throw(new \InvalidArgumentException ("No profile Username present", 405));
+		}
+
+		//profile Type is a required field
+		if(empty($requestObject->profileType) === true) {
+			throw(new \InvalidArgumentException ("No profile Type present", 405));
+		}
 
 		//profile email is a required field
 		if(empty($requestObject->profileEmail) === true) {
@@ -66,9 +80,9 @@ try {
 
 		//create the profile object and prepare to insert into the database
 		$profile = new Profile(generateUuidV4()->toString(), $profileActivationToken, "Unit and Box",
-			$requestObject->profileAvatarUrl, "This is my bio.", "APO", $requestObject->profileEmail,
-			$hash, "Lilly Poblano", "2nd Class Private", "AE", "soldier",
-			"LillyP", $requestObject->profileZip );
+			"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "This is my bio.", "APO", $requestObject->profileEmail,
+			$hash, $requestObject->profileName, "2nd Class Private", "AE", $requestObject->profileType,
+			$requestObject->profileUsername, "87110");
 
 		//insert the profile into the database
 		$profile->insert($pdo);
