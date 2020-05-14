@@ -23,7 +23,7 @@ $reply->data = null;
 try {
 
 	// Grab the mySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+	$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 	$pdo = $secrets->getPdoObjects();
 
 	// Check the HTTP method being used
@@ -34,12 +34,12 @@ try {
 
 	// Make sure the activation token is the correct size
 	if(strlen($activation) !== 32) {
-		throw(new \InvalidArgumentException("Activation has an incorrect length", 405));
+		throw(new InvalidArgumentException("Activation has an incorrect length", 405));
 	}
 
 	// Verify that the activation token is a string value of a hexadecimal
 	if(ctype_xdigit($activation) === false) {
-		throw(new \InvalidArgumentException("Activation is empty or has invalid contents", 405));
+		throw(new InvalidArgumentException("Activation is empty or has invalid contents", 405));
 	}
 
 	// Handle the GET HTTP request
@@ -72,7 +72,7 @@ try {
 		}
 	} else {
 		// Throw an exception if the HTTP request is not a GET
-		throw(new \InvalidArgumentException("Invalid HTTP method request", 403));
+		throw(new InvalidArgumentException("Invalid HTTP method request", 403));
 	}
 
 	// Update the reply objects status and message state variables if an exception or type exception was thrown
