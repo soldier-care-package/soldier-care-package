@@ -1,13 +1,14 @@
 {
   "require": {
+    "fzaninotto/faker": "@stable",
     "phpunit/dbunit": "@stable",
     "phpunit/phpunit": "@stable",
+    "phpseclib/phpseclib": "2.0.11",
+    "swiftmailer/swiftmailer": "@stable",
     "lcobucci/jwt": "3.2",
-    "ramsey/uuid": "@stable",
-    "ext-pdo": "*",
-    "ext-json": "*"
+    "ramsey/uuid": "@stable"
   },
-  "scripts": {
+  "scripts":{
     "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
   }
 }
