@@ -41,6 +41,7 @@ try {
 	$requestProfileId = filter_input(INPUT_GET, "requestProfile", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	var_dump($requestProfileId);
 	$requestContent = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$requestDate = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	//make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
@@ -61,7 +62,7 @@ try {
 			$reply->data = Request::getRequestByRequestProfileId($pdo, $requestProfileId)->toArray();
 
 		} else {
-			$request = Request::getAllRequests($pdo)->toArray();
+			$requests = Request::getAllRequests($pdo)->toArray();
 			$requestProfiles = [];
 			foreach($requests as $request){
 				$profile = 	Profile::getProfileByProfileId($pdo, $request->getRequestProfileId());
@@ -116,8 +117,9 @@ try {
 			//enforce the end user has a JWT token
 
 
-			//enforce the user is signed in and only trying to edit their own tweet
-			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $request->getRequestProfileId()->toString()) {
+			//enforce the user is signed in and only trying to edit their own request
+			if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !==
+				$request->getRequestProfileId()->toString()) {
 				throw(new \InvalidArgumentException("You are not allowed to edit this request", 403));
 			}
 
