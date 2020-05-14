@@ -114,5 +114,20 @@ try{
 
 		validateJwtHeader();
 
+		// Delete the post from the database
+		$profile->delete($pdo);
+		$reply->message = "Profile Deleted";
+
+	} else {
+		throw(new InvalidArgumentException("Invalid HTTP Request", 400));
 	}
+	// Catch any exceptions that were thrown and update the status and message state variable fields
+} catch(\Exception | \TypeError $exception) {
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
 }
+header("Content-type: application/json");
+if($reply->data === null) {
+	unset($reply->data);
+}
+
