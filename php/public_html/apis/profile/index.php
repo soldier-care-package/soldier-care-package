@@ -39,6 +39,38 @@ try{
 		// Set XSRF cookie
 		setXsrfCookie();
 
+		// Get a post by content
+		if(empty($id) === false) {
+			$reply->data = Profile::getProfileByProfileId($pdo, $id);
+		} else if(empty($profileUsername) === false) {
+			$reply->data = Profile::getProfileUsername($pdo, $profileUsername);
+		} else if(empty($profileEmail) === false) {
+			$reply->data = Profile::getProfileEmail($pdo, $profileEmail);
+		}
+
+	} else if($method === "PUT") {
+		// Enforce that the XSRF token is present in the header
+		verifyXsrf();
+
+		// Enforce the end user has a JWT token
+
+		// Enforce the user is signed in and only trying to edit their own profile
+		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $id) {
+			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		}
+
+		validateJwtHeader();
+
+		// Decode the response from the front end
+		$requestContent = file_get_contents("php://input");
+		$requestObject = json_decode($requestContent);
+
+		// Retrieve the profile to be updated
+		$profile = Profile::getProfileByProfileId($pdo, $id);
+		if($profile === null) {
+			throw(new RuntimeException("Profile does not exist", 404));
+		}
+
 
 	}
 }
