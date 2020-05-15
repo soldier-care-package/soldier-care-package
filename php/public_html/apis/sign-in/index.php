@@ -24,7 +24,7 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 		}
 		// grab mySQL statement
 		$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
-		$pdo = $secrets->getPdoObjects();
+		$pdo = $secrets->getPdoObject();
 
 		// determine which HTTP method is being used
 		$method = array_key_exists("HTTP_X_HTTP_MEHTOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_MEHTOD"] : $_SERVER["REQUEST_METHOD"];
@@ -57,8 +57,8 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			if(empty($profile) === true) {
 				throw(new InvalidArgumentException("Invalid email", 401));
 			}
-			$profile->setProfileActivationToken(null);
-			$profile->update($pdo);
+//			$profile->setProfileActivationToken(null);
+//			$profile->update($pdo);
 
 			// Verify that the hash is correct
 			if(password_verify($requestObject->profilePassword, $profile->getProfileHash()) === false) {
