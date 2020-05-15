@@ -37,10 +37,10 @@ try {
 	//sanitize input
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$itemRequestId = filter_input(INPUT_GET, "item Request Id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$itemDonationId = filter_input(INPUT_GET, "item Donation id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$itemTrackingNumber = filter_input(INPUT_GET, "item tracking number", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$itemUrl = filter_input(INPUT_GET, "item url", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$itemRequestId = filter_input(INPUT_GET, "itemRequestId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$itemDonationId = filter_input(INPUT_GET, "itemDonationId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+//	$itemTrackingNumber = filter_input(INPUT_GET, "item tracking number", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+//	$itemUrl = filter_input(INPUT_GET, "item url", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
 	//make sure the id is valid for methods that require it
@@ -70,12 +70,10 @@ try {
 		verifyXsrf();
 
 		// enforce the user is signed in
-		if(empty($_SESSION["request"]) === true) {
-			throw(new \InvalidArgumentException("you must be logged in to post items", 401));
+		if(empty($_SESSION["profile"]) === true) {
+			throw(new \InvalidArgumentException("you must be logged in to post items for request/donation", 401));
 
-		} else if(empty($_SESSION["donation"]) === true) {
-				throw(new \InvalidArgumentException("you must be logged in to accept items", 401));
-			}
+		}
 
 		$requestContent = file_get_contents("php://input");
 
@@ -89,14 +87,14 @@ try {
 
 		// This Line Then decodes the JSON package and stores that result in $requestObject
 		//make sure item Tracking number is available (optional field)
-			$requestObject->foo; //value:bar
+
 		if(empty($requestObject->itemTrackingNumber) === true) {
 			$requestObject->itemTrackingNumber = null;
 		}
-		$requestObject->foo; //value:bar
-		// make sure itemUrl is accurate (optional field)
+
+		// make sure itemUrl is accurate (required field)
 		if(empty($requestObject->itemUrl) === true) {
-			$requestObject->itemUrl = null;
+			throw(new \InvalidArgumentException ("No url for item", 405));
 		}
 
 		//perform the actual put or post
@@ -106,26 +104,50 @@ try {
 
 			// enforce the user is signed in
 			if(empty($_SESSION["request"]) === true) {
-				throw(new \InvalidArgumentException("you must be logged in to post request", 403));
-			} else if(empty($_SESSION["donation"]) === true) {
-				throw(new \InvalidArgumentException("you must be logged in to post donation", 403));
-			}
+				throw(new \InvalidArgumentException("you must start a request to post item", 403));
+		}
+// else if(empty($_SESSION["donation"]) === true) {
+//				throw(new \InvalidArgumentException("you must be logged in to post donation", 403));
+//			}
 
 			//enforce the end user has a JWT token
 			validateJwtHeader();
 
 			// create new item and insert into the database
-			$item = new Item(generateUuidV4()->toString(), $_SESSION["request"]->getRequestId()->toString(), null, null, null);
+			$item = new Item(generateUuidV4()->toString(), null, $_SESSION["request"]->getRequestId()->toString(), null,  $requestObject->itemUrl);
 			$item->insert($pdo);
 
 			// update reply
-			$reply->message = "Request created OK";
+			$reply->message = "Item created OK";
 
-			$item = new Item(generateUuidV4()->toString(), $_SESSION["donation"]->getDonationId()->toString(), $requestObject->itemRequestId, null, null);
-			$item->insert($pdo);
+//			$item = new Item(generateUuidV4()->toString(), $_SESSION["donation"]->getDonationId()->toString(), $requestObject->itemRequestId, null, null);
+//			$item->insert($pdo);
+//
+//			// update reply
+//			$reply->message = "Donation created OK";
+		}
+		//perform the put
+		if($method ==="PUT") {
 
-			// update reply
-			$reply->message = "Donation created OK";
+			//retrieve the item to update
+			$item = Item ::getItemByItemId($pdo, $id);
+			if ($item === null) {
+				throw(new RuntimeException("Item does not exist",404));
+			}
+			validateJwtHeader();
+
+			//accept Item
+			//todo I need to allow donor to remove themselves from Item
+			$item->setItemDonationId($_SESSION["donation"]->getDonationId());
+
+			//Update tracking number for Item
+			if(empty($requestObject->itemTrackingNumber) === false) {
+				$item->setItemTrackingNumber($requestObject->itemTrackingNumber);
+			}
+			else if(empty($requestObject->itemTrackingNumber) === true) {
+				$item->setItemTrackingNumber(null);
+			}
+				$reply->message="Item Updated successfully";
 		}
 
 	} else if($method === "DELETE") {
@@ -141,11 +163,14 @@ try {
 
 		//enforce the user is signed in and only trying to edit their own item
 		if(empty($_SESSION["request"]) === true || $_SESSION["request"]->getRequestId()->toString() !== $item->getItemRequestId()->toString()) {
+			if(empty ($item->getDonationId()) === false){
+				throw(new \InvalidArgumentException("Item is already is accepted by donor cannot make any changes"));
+			}
 			throw(new \InvalidArgumentException("You are not allowed to delete this item", 403));
 		}
-			else if(empty($_SESSION["donation"]) === true || $_SESSION["donation"]->getDonationId()->toString() !== $item->getItemDonationId()->toString()) {
-				throw(new \InvalidArgumentException("You are not allowed to delete this item", 403));
-			}
+//			else if(empty($_SESSION["donation"]) === true || $_SESSION["donation"]->getDonationId()->toString() !== $item->getItemDonationId()->toString()) {
+//				throw(new \InvalidArgumentException("You are not allowed to delete this item", 403));
+//			}
 
 		//enforce the end user has a JWT token
 		validateJwtHeader();
