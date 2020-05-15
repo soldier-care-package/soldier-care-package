@@ -23,7 +23,7 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			session_start();
 		}
 		// grab mySQL statement
-		$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
 		$pdo = $secrets->getPdoObjects();
 
 		// determine which HTTP method is being used
