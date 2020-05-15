@@ -316,13 +316,15 @@ class ProfileTest extends SoldierCarePackageTest {
 
 	/**
 	 * test grabbing a Profile by email
-	 **/
+	 *
+	 * @throws \Exception
+	 */
 	public function testGetValidProfileByEmail() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("profile");
 
 		// create a new Profile and insert to into mySQL
-		$profileId = generateUuidV4();
+		$profileId = generateUuidV4()->toString();
 		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
 		$profile->insert($this->getPDO());
 
