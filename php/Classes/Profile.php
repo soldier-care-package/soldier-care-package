@@ -730,6 +730,52 @@ class Profile implements \JsonSerializable {
 	}
 
 	/**
+	 * gets the Profile by email
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $profileEmail email to search for
+	 * @return Profile|null Profile or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getProfileByProfileEmail(\PDO $pdo, string $profileEmail): ?Profile {
+		// sanitize the email before searching
+		$profileEmail = trim($profileEmail);
+		$profileEmail = filter_var($profileEmail, FILTER_VALIDATE_EMAIL);
+
+		if(empty($profileEmail) === true) {
+			throw(new \PDOException("Not a valid email"));
+		}
+
+		// create query template
+		$query = "SELECT profileId, profileActivationToken, profileAddress, profileAvatarUrl, profileBio, profileCity, profileEmail, profileHash, profileName, profileRank, profileState, profileType, profileUsername, profileZip
+						FROM profile 
+						WHERE profileEmail = :profileEmail";
+		$statement = $pdo->prepare($query);
+
+		// bind the profile id to the place holder in the template
+		$parameters = ["profileEmail" => $profileEmail];
+		$statement->execute($parameters);
+
+		// grab the Profile from mySQL
+		try {
+			$profile = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$profile = new Profile($row["profileId"], $row["profileActivationToken"], $row["profileAddress"],
+					$row["profileAvatarUrl"], $row["profileBio"], $row["profileCity"], $row["profileEmail"],
+					$row["profileHash"], $row["profileName"], $row["profileRank"], $row["profileState"],
+					$row["profileType"], $row["profileUsername"], $row["profileZip"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($profile);
+	}
+
+	/**
 	 * get all soldier profiles
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -776,3 +822,4 @@ class Profile implements \JsonSerializable {
 		return($fields);
 	}
 }
+
