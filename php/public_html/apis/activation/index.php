@@ -57,11 +57,11 @@ try {
 			// Make sure the activation token matches
 			if($activation === $profile->getProfileActivationToken()) {
 
-				// Set activation to null
-				$profile->setProfileActivationToken(null);
-
-				// Update the profile in the database
-				$profile->update($pdo);
+//				// Set activation to null
+//				$profile->setProfileActivationToken(null);
+//
+//				// Update the profile in the database
+//				$profile->update($pdo);
 
 				// Set the reply for the end user
 				$reply->data = "Thank you for activating your account, you will be auto-redirected to your profile shortly.";

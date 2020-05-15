@@ -91,23 +91,31 @@ try {
 		if($method === "POST") {
 
 			//enforce that the end user has a XSRF token.
-		verifyXsrf();
+			verifyXsrf();
 
-		//enforce the end user has a JWT token
-		//validateJwtHeader();
+			//enforce the end user has a JWT token
+			//validateJwtHeader();
 
-		// enforce the user is signed in
-		if(empty($_SESSION["request"]) === true) {
-			throw(new \InvalidArgumentException("you must be logged in too post items in requests", 403));
-		}
+			// enforce the user is signed in
+			if(empty($_SESSION["request"]) === true) {
+				throw(new \InvalidArgumentException("you must be logged in to post items in requests", 403));
+			}
 
-		validateJwtHeader();
+			if(empty($_SESSION["donation"]) === true) {
+				throw(new \InvalidArgumentException("you must be logged in to accept donation", 403));
+			}
 
-		$item = new Item($_SESSION["request"]->getRequestId(), $requestObject->itemRequestId);
+			validateJwtHeader();
+
+			$item = new Item($_SESSION["request"]->getRequestId()->toString(), $requestObject->itemRequestId);
+			$item->insert($pdo);
+			$reply->message = "item Request successful";
+
+		$item = new Item($_SESSION["donation"]->getDonationId()->toString(), $requestObject->itemDonationId);
 		$item->insert($pdo);
-		$reply->message = "item Request successful";
+		$reply->message = "item Donation successful";
 
-		} else if($method === "PUT") {
+		} else if($method === "DELETE") {
 
 			//enforce the end user has a XSRF token.
 			verifyXsrf();
@@ -123,7 +131,7 @@ try {
 
 			//enforce the user is signed in and only trying to edit their own item
 			if(empty($_SESSION["request"]) === true || $_SESSION["request"]->getRequestId()->toString() !== $item->getItemRequestId()->toString()) {
-				throw(new \InvalidArgumentException("You are not allowed to delete this tweet", 403));
+				throw(new \InvalidArgumentException("You are not allowed to delete this item", 403));
 			}
 
 			//validateJwtHeader();
