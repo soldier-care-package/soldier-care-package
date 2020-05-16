@@ -163,7 +163,7 @@ try {
 
 		//enforce the user is signed in and only trying to edit their own item
 		if(empty($_SESSION["request"]) === true || $_SESSION["request"]->getRequestId()->toString() !== $item->getItemRequestId()->toString()) {
-			if(empty ($item->getDonationId()) === false){
+			if(empty ($item->getItemDonationId()) === false){
 				throw(new \InvalidArgumentException("Item is already is accepted by donor cannot make any changes"));
 			}
 			throw(new \InvalidArgumentException("You are not allowed to delete this item", 403));
