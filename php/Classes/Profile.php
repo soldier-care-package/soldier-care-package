@@ -17,6 +17,7 @@ class Profile implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 *  id for this profile; this is the primary key
+	 * @var Uuid $profileId
 	 **/
 	private $profileId;
 	/**
@@ -123,7 +124,7 @@ class Profile implements \JsonSerializable {
 	 *
 	 * @return uuid value of profile id or null of new Profile
 	 **/
-	public function getProfileId() : uuid {
+	public function getProfileId() : Uuid {
 		return ($this->profileId);
 	}
 
@@ -578,7 +579,7 @@ class Profile implements \JsonSerializable {
 		$newProfileZip = trim($newProfileZip);
 		$newProfileZip = filter_var($newProfileZip, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newProfileZip) === true) {
-//			throw(new \InvalidArgumentException("profile zip is empty or insecure"));
+//		throw(new \InvalidArgumentException("profile zip is empty or insecure"));
 		}
 
 		// verify the profile zip will fit in the database
@@ -659,7 +660,7 @@ class Profile implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getProfileByProfileId(\PDO $pdo, $profileId) : ?profile {
+	public static function getProfileByProfileId(\PDO $pdo, $profileId) : ?Profile {
 		// sanitize the profileId before searching
 		try{
 			$profileId = self::validateUuid($profileId);

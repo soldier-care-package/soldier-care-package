@@ -34,18 +34,18 @@ trait ValidateUuid {
 			// 36 characters is a human readable uuid
 			if(strlen($newUuid) === 36) {
 				if(Uuid::isValid($newUuid) === false) {
-					throw(new \InvalidArgumentException("invalid uuid"));
+					throw(new \InvalidArgumentException("invalid uuid one"));
 				}
 				$uuid = Uuid::fromString($newUuid);
 			} else {
-				throw(new \InvalidArgumentException("invalid uuid"));
+				throw(new \InvalidArgumentException("invalid uuid two"));
 			}
 		} else if(gettype($newUuid) === "object" && get_class($newUuid) === "Ramsey\\Uuid\\Uuid") {
 			// if the misquote id is already a valid UUID, press on
 			$uuid = $newUuid;
 		} else {
 			// throw out any other trash
-			throw(new \InvalidArgumentException("invalid uuid"));
+			throw(new \InvalidArgumentException("invalid uuid three"));
 		}
 		// verify the uuid is uuid v4
 		if($uuid->getVersion() !== 4) {
