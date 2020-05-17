@@ -66,13 +66,13 @@ use Cohort28SCP\SoldierCarePackage\Profile;
 			}
 
 			// Grab profile from database and put into a session
-			$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId());
+			$profile = Profile::getProfileByProfileId($pdo, $profile->getProfileId()->toString());
 
 			$_SESSION["profile"] = $profile;
 
 			// Create the Auth payload
 			$authObject = (object) [
-				"profileId" =>$profile->getProfileId(),
+				"profileId" =>$profile->getProfileId()->toString(),
 				"profileUsername" =>$profile->getProfileUsername()
 			];
 
