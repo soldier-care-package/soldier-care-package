@@ -47,10 +47,10 @@ try{
 		// Get a post by content
 		if(empty($id) === false) {
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
-		} else if(empty($profileUsername) === false) {
-			$reply->data = Profile::getProfileUsername($pdo, $profileUsername);
+//		} else if(empty($profileUsername) === false) {
+//			$reply->data = Profile::getProfileByProfileUsername($pdo, $profileUsername);
 		} else if(empty($profileEmail) === false) {
-			$reply->data = Profile::getProfileEmail($pdo, $profileEmail);
+			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 		}
 
 	} else if($method === "PUT") {

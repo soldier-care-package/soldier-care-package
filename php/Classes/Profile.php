@@ -321,7 +321,7 @@ class Profile implements \JsonSerializable {
 	 * @return string value of profile email
 	 **/
 	public function getProfileEmail() : string {
-		return $this->profileEmail;
+		return ($this->profileEmail);
 	}
 
 	/**
