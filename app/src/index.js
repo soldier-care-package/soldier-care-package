@@ -7,6 +7,7 @@ import {Home} from "./pages/Home";
 import {FourOhFour} from "./pages/FourOhFour";
 import {Navigation} from "./components/Navigation";
 import {SoldierOpen} from "./pages/SoldierOpen";
+import {SoldierHistory} from "./pages/SoldierHistory";
 
 const Routing = () => (
 	<>
@@ -15,6 +16,7 @@ const Routing = () => (
 	<Switch>
 	<Route exact path="/" component={Home}/>
 	<Route exact path="/SoldierOpen" component={SoldierOpen}/>
+	<Route exact path="/SoldierHistory" component={SoldierHistory}/>
 	<Route component={FourOhFour}/>
 	</Switch>
 	</BrowserRouter>
