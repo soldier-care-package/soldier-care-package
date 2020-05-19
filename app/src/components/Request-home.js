@@ -6,12 +6,14 @@ import ListGroup from "react-bootstrap/ListGroup";
 export const Request = () => {
 	return (
 		<>
-			<Card bg="primary" text="white"  border="dark" style={{ width: '18rem' }}>
-				<Card.Img variant="top" src="holder.js/100px180" />
+			<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
+				<Card.Img variant="top" src="picture-hold.jpg" alt="Profile picture"/>
 				<Card.Body>
 					<Card.Text>
-						Some quick example text to build on the card title and make up the bulk of
-						the card's content.
+						Soldier bio. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+						sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla
+						facilisi etiam dignissim diam quis. A iaculis at erat pellentesque adipiscing
+						commodo elit at. Vitae suscipit tellus mauris a. Non curabitur gravida arcu ac.
 					</Card.Text>
 					<Card.Text>
 					<ListGroup>
@@ -23,10 +25,6 @@ export const Request = () => {
 					</Card.Text>
 						<Button variant="light" size="lg" block>Request Details</Button>
 				</Card.Body>
-
-
-
-
 			</Card>
 		</>
 	)

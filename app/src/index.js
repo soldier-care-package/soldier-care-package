@@ -6,6 +6,7 @@ import {Route, Switch} from "react-router";
 import {Home} from "./pages/Home";
 import {FourOhFour} from "./pages/FourOhFour";
 import {Navigation} from "./components/Navigation";
+import {SoldierOpen} from "./pages/SoldierOpen";
 
 const Routing = () => (
 	<>
@@ -13,6 +14,7 @@ const Routing = () => (
 	<BrowserRouter>
 	<Switch>
 	<Route exact path="/" component={Home}/>
+	<Route exact path="/SoldierOpen" component={SoldierOpen}/>
 	<Route component={FourOhFour}/>
 	</Switch>
 	</BrowserRouter>
