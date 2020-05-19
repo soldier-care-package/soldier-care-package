@@ -39,7 +39,6 @@ try {
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$requestProfileId = filter_input(INPUT_GET, "requestProfile", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	var_dump($requestProfileId);
 	$requestContent = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$requestDate = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -154,7 +153,7 @@ try {
 	} else if($method === "DELETE") {
 
 		//enforce that the end user has a XSRF token.
-		verifyXsrf();
+		veriyXsrf();
 
 		// retrieve the Request to be deleted
 		$request = Request::getRequestByRequestId($pdo, $id);
