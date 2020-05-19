@@ -24,8 +24,8 @@ $reply->status = 200;
 $reply->data = null;
 try{
 	// Grab the mySQL connection
-	$secrets = new Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
-	$pdo = $secrets->getPdoObjects();
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/cohort28/scp.ini");
+	$pdo = $secrets->getPdoObject();
 
 	// Determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
@@ -47,10 +47,10 @@ try{
 		// Get a post by content
 		if(empty($id) === false) {
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
-		} else if(empty($profileUsername) === false) {
-			$reply->data = Profile::getProfileUsername($pdo, $profileUsername);
+//		} else if(empty($profileUsername) === false) {
+//			$reply->data = Profile::getProfileByProfileUsername($pdo, $profileUsername);
 		} else if(empty($profileEmail) === false) {
-			$reply->data = Profile::getProfileEmail($pdo, $profileEmail);
+			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
 		}
 
 	} else if($method === "PUT") {
