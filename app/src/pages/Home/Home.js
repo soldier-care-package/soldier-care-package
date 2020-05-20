@@ -1,5 +1,5 @@
 import React from "react"
-import {Request} from "../components/Request-home";
+import {Request} from "./Request-home";
 
 
 export const Home = () => {

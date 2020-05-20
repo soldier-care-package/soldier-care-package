@@ -1,5 +1,5 @@
 import React from "react"
-import {Open} from "../components/Open-soldier";
+import {Open} from "./Open-soldier";
 
 export const SoldierOpen = () => {
 	return (
