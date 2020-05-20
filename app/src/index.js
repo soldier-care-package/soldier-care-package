@@ -5,7 +5,7 @@ import {BrowserRouter} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {Home} from "./pages/Home";
 import {FourOhFour} from "./pages/FourOhFour";
-import {Navigation} from "./shared/components/Navigation";
+import {Navigation} from "./shared/components/main-nav/Navigation";
 
 const Routing = () => (
 	<>
