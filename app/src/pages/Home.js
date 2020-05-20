@@ -1,5 +1,5 @@
 import React from "react"
-import {Test} from "../components/Test";
+import {Test} from "../shared/components/Test";
 
 export const Home = () => {
 	return (
