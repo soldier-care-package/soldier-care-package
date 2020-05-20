@@ -6,7 +6,7 @@ export const History = () => {
 	return (
 		<>
 			<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
-				<Card.Img variant="top" src="picture-hold.jpg" />
+				<Card.Img variant="top" src="picture-hold.jpg" alt="Profile picture" />
 				<Card.Body>
 					<Card.Text>
 						Soldier bio. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
