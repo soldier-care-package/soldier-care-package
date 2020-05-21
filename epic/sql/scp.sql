@@ -52,3 +52,6 @@ CREATE TABLE item(
 	FOREIGN KEY(itemRequestId) REFERENCES request(requestId),
 	PRIMARY KEY(itemId)
 );
+
+# select hex(requestId),hex(requestProfileId), requestContent, requestDate
+#   from request;

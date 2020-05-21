@@ -168,7 +168,7 @@ class Request implements \JsonSerializable {
 	public function setRequestDate($newRequestDate = null) : void {
 		// base case: if the date is null, use the current date and time
 		if($newRequestDate === null) {
-			$this->RequestDate = new \DateTime();
+			$this->requestDate = new \DateTime();
 			return;
 		}
 

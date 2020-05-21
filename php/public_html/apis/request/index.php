@@ -38,9 +38,9 @@ try {
 	//sanitize input
 
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$requestProfileId = filter_input(INPUT_GET, "requestProfile", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$requestProfileId = filter_input(INPUT_GET, "requestProfileId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	$requestContent = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$requestDate = filter_input(INPUT_GET, "requestContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$requestDate = filter_input(INPUT_GET, "requestDate", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 	//make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
@@ -64,13 +64,14 @@ try {
 			$requests = Request::getAllRequests($pdo)->toArray();
 			$requestProfiles = [];
 			foreach($requests as $request){
-				$profile = 	Profile::getProfileByProfileId($pdo, $request->getRequestProfileId());
+				$profile = 	Profile::getProfileByProfileId($pdo, $request->getRequestProfileId()->toString());
 				$requestProfiles[] = (object)[
 					"requestId"=>$request->getRequestId(),
 					"requestProfileId"=>$request->getRequestProfileId(),
 					"requestContent"=>$request->getRequestContent(),
 					"requestDate"=>$request->getRequestDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+					//todo need to include all information that i want to pull with all request ex name, username maybe items
 				];
 			}
 			$reply->data = $requestProfiles;
@@ -98,7 +99,7 @@ try {
 		if(empty($requestObject->requestContent) === true) {
 			throw(new \InvalidArgumentException ("No content for Request.", 405));
 		}
-		$requestObject->foo; //value:bar
+
 		// make sure request date is accurate (optional field)
 		if(empty($requestObject->requestDate) === true) {
 			$requestObject->requestDate = null;
@@ -125,7 +126,6 @@ try {
 			validateJwtHeader();
 
 			// update all attributes
-			$request->setRequestDate($requestObject->requestDate);
 			$request->setRequestContent($requestObject->requestContent);
 			$request->update($pdo);
 
@@ -143,7 +143,8 @@ try {
 			validateJwtHeader();
 
 			// create new request and insert into the database
-			$request = new Request(generateUuidV4()->toString(), $_SESSION["profile"]->getProfileId(), $requestObject->requestContent, null);
+			$request = new Request(generateUuidV4()->toString(), $_SESSION["profile"]->getProfileId()->toString(),
+				$requestObject->requestContent, null);
 			$request->insert($pdo);
 
 			// update reply
@@ -153,7 +154,7 @@ try {
 	} else if($method === "DELETE") {
 
 		//enforce that the end user has a XSRF token.
-		veriyXsrf();
+		verifyXsrf();
 
 		// retrieve the Request to be deleted
 		$request = Request::getRequestByRequestId($pdo, $id);

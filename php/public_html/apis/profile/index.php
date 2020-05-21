@@ -71,7 +71,7 @@ try{
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		$reply->message = $requestObject;
+
 		// Retrieve the profile to be updated
 		$profile = Profile::getProfileByProfileId($pdo, $id);
 		if($profile === null) {

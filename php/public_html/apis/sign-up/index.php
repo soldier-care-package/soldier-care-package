@@ -39,7 +39,6 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		$reply->content=$requestObject;
 		//profile Name is a required field
 		if(empty($requestObject->profileName) === true) {
 			throw(new \InvalidArgumentException ("No profile name present", 405));
