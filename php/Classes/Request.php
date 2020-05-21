@@ -8,13 +8,8 @@ require_once(dirname(__DIR__) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 /**
- * Small Cross Section of a Twitter like Message
  *
- * This Tweet can be considered a small example of what services like Twitter store when messages are sent and
- * received using Twitter. This can easily be extended to emulate more features of Twitter.
- *
- * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @version 3.0.0
+ * @author Hannah Miltenberger <hannahmilt@gmail.com>
  **/
 class Request implements \JsonSerializable {
 	use ValidateUuid;
@@ -54,7 +49,7 @@ class Request implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newRequestId, $newRequestProfileId, $newRequestContent, $newRequestDate = null) {
+	public function __construct($newRequestId, $newRequestProfileId, $newRequestContent, $newRequestDate) {
 		try {
 			$this->setRequestId($newRequestId);
 			$this->setRequestProfileId($newRequestProfileId);
@@ -173,7 +168,7 @@ class Request implements \JsonSerializable {
 	public function setRequestDate($newRequestDate = null) : void {
 		// base case: if the date is null, use the current date and time
 		if($newRequestDate === null) {
-			$this->RequestDate = new \DateTime();
+			$this->requestDate = new \DateTime();
 			return;
 		}
 
