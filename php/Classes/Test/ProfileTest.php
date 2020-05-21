@@ -16,11 +16,11 @@ use Cohort28SCP\SoldierCarePackage\{Profile};
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  **/
 class ProfileTest extends SoldierCarePackageTest {
-	/**
-	 * Profile that created the class; this is for foreign key relations
-	 * @var Profile profile
-	 **/
-	protected $profile;
+//	/**
+//	 * Profile that created the class;
+//	 * @var Profile profile
+//	 **/
+//	protected $profile;
 
 	/**
 	 * valid profile activation token to create the profile object to own the test
@@ -106,6 +106,7 @@ class ProfileTest extends SoldierCarePackageTest {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
+
 		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 8]);
 
 		$this->VALID_PROFILE_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
@@ -151,8 +152,8 @@ class ProfileTest extends SoldierCarePackageTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
+		$this->assertEquals($pdoProfile->getProfileId()->toString(), $profileId);
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -202,7 +203,7 @@ class ProfileTest extends SoldierCarePackageTest {
 		$pdoProfile = Profile::getProfileByProfileId($this->getPDO(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
-		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -262,7 +263,7 @@ class ProfileTest extends SoldierCarePackageTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
 
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -298,7 +299,7 @@ class ProfileTest extends SoldierCarePackageTest {
 
 		// grab the result from the array and validate it
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -312,6 +313,51 @@ class ProfileTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoProfile->getProfileType(), $this->VALID_PROFILE_TYPE);
 		$this->assertEquals($pdoProfile->getProfileUsername(), $this->VALID_PROFILE_USERNAME);
 		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
+	}
+
+	/**
+	 * test grabbing a Profile by email
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetValidProfileByEmail() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("profile");
+
+		// create a new Profile and insert to into mySQL
+		$profileId = generateUuidV4()->toString();
+		$profile = new Profile($profileId, $this->VALID_PROFILE_ACTIVATION_TOKEN, $this->VALID_PROFILE_ADDRESS, $this->VALID_PROFILE_AVATAR_URL, $this->VALID_PROFILE_BIO, $this->VALID_PROFILE_CITY, $this->VALID_PROFILE_EMAIL, $this->VALID_PROFILE_HASH, $this->VALID_PROFILE_NAME, $this->VALID_PROFILE_RANK, $this->VALID_PROFILE_STATE, $this->VALID_PROFILE_TYPE, $this->VALID_PROFILE_USERNAME, $this->VALID_PROFILE_ZIP);
+		$profile->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoProfile = Profile::getProfileByProfileEmail($this->getPDO(), $profile->getProfileEmail());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("profile"));
+
+		// grab the result from the array and validate it
+		$this->assertEquals($pdoProfile->getProfileId()->toString(), $profileId);
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
+		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
+		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
+		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
+		$this->assertEquals($pdoProfile->getProfileBio(), $this->VALID_PROFILE_BIO);
+		$this->assertEquals($pdoProfile->getProfileCity(), $this->VALID_PROFILE_CITY);
+		$this->assertEquals($pdoProfile->getProfileEmail(), $this->VALID_PROFILE_EMAIL);
+		$this->assertEquals($pdoProfile->getProfileHash(), $this->VALID_PROFILE_HASH);
+		$this->assertEquals($pdoProfile->getProfileName(), $this->VALID_PROFILE_NAME);
+		$this->assertEquals($pdoProfile->getProfileRank(), $this->VALID_PROFILE_RANK);
+		$this->assertEquals($pdoProfile->getProfileState(), $this->VALID_PROFILE_STATE);
+		$this->assertEquals($pdoProfile->getProfileType(), $this->VALID_PROFILE_TYPE);
+		$this->assertEquals($pdoProfile->getProfileUsername(), $this->VALID_PROFILE_USERNAME);
+		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
+	}
+
+	/**
+	 * test grabbing a Profile by an email that does not exists
+	 **/
+	public function testGetInvalidProfileByEmail() : void {
+		// grab an email that does not exist
+		$profile = Profile::getProfileByProfileEmail($this->getPDO(), "does@not.exist");
+		$this->assertNull($profile);
 	}
 
 	/**
@@ -337,7 +383,7 @@ class ProfileTest extends SoldierCarePackageTest {
 		// grab the result from the array and validate it
 		$pdoProfile = $results[0];
 		$this->assertEquals($pdoProfile->getProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
+//		$this->assertEquals($pdoProfile->getProfileId(), $profile->getProfileId()->toString());
 		$this->assertEquals($pdoProfile->getProfileActivationToken(), $this->VALID_PROFILE_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoProfile->getProfileAddress(), $this->VALID_PROFILE_ADDRESS);
 		$this->assertEquals($pdoProfile->getProfileAvatarUrl(), $this->VALID_PROFILE_AVATAR_URL);
@@ -353,3 +399,4 @@ class ProfileTest extends SoldierCarePackageTest {
 		$this->assertEquals($pdoProfile->getProfileZip(), $this->VALID_PROFILE_ZIP);
 	}
 }
+

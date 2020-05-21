@@ -15,7 +15,7 @@ use Cohort28SCP\SoldierCarePackage\{ Profile, Donation};
  * are tested for both invalid and valid inputs.
  *
  * @see Donation
- * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @author Hannah Miltenberger <hannahmilt@gmail.com>
  **/
 
 class DonationTest extends SoldierCarePackageTest {
@@ -24,7 +24,7 @@ class DonationTest extends SoldierCarePackageTest {
 	 * Profile that created the Donation; this is for foreign key relations
 	 * @var Profile profile
 	 **/
-	protected $profile = null;
+	protected $profile;
 
 	/**
 	 * timestamp of the donation; this starts as null and is assigned later
