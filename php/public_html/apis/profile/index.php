@@ -47,6 +47,7 @@ try{
 		// Get a post by content
 		if(empty($id) === false) {
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
+			//todo make function to getProfileByProfileUsername function
 //		} else if(empty($profileUsername) === false) {
 //			$reply->data = Profile::getProfileByProfileUsername($pdo, $profileUsername);
 		} else if(empty($profileEmail) === false) {
@@ -70,6 +71,7 @@ try{
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
+		$reply->message = $requestObject;
 		// Retrieve the profile to be updated
 		$profile = Profile::getProfileByProfileId($pdo, $id);
 		if($profile === null) {
@@ -93,6 +95,15 @@ try{
 
 		$profile->setProfileUsername($requestObject->profileUsername);
 		$profile->setProfileEmail($requestObject->profileEmail);
+		$profile->setProfileAddress($requestObject->profileAddress);
+		$profile->setProfileAvatarUrl($requestObject->profileAvatarUrl);
+		$profile->setProfileBio($requestObject->profileBio);
+		$profile->setProfileCity($requestObject->profileCity);
+		$profile->setProfileEmail($requestObject->profileEmail);
+//		$profile->setProfileHash($requestObject->profileHash);
+		$profile->setProfileRank($requestObject->profileRank);
+		$profile->setProfileState($requestObject->profileState);
+		$profile->setProfileZip($requestObject->profileZip);
 //		$profile->setProfilePhone($requestObject->profilePhone);
 		$profile->update($pdo);
 
