@@ -15,7 +15,7 @@ use Cohort28SCP\SoldierCarePackage\{ Profile, Request};
  * are tested for both invalid and valid inputs.
  *
  * @see Request
- * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @author Hannah Miltenberger <hannahmilt@gmail.com>
  **/
 
 class RequestTest extends SoldierCarePackageTest {
