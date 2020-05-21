@@ -101,7 +101,7 @@ class Item implements \JsonSerializable {
 	/** accessor method for itemDonationId
 	 *@return Uuid of itemDonationId
 	 */
-	public function getItemDonationId() : Uuid {
+	public function getItemDonationId() {
 		return($this->itemDonationId);
 	}
 
@@ -115,11 +115,15 @@ class Item implements \JsonSerializable {
 	 * @throws \TypeError if $newItemDonationId is not a uuid or string
 	 **/
 	public function setItemDonationId($newItemDonationId) : void {
-		try {
-			$uuid = self::validateUuid($newItemDonationId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(),0, $exception));
+		if ($newItemDonationId===null) {
+			$uuid = null;
+		}else{
+			try {
+				$uuid = self::validateUuid($newItemDonationId);
+			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+				$exceptionType = get_class($exception);
+				throw(new $exceptionType($exception->getMessage(), 0, $exception));
+			}
 		}
 		$this->itemDonationId = $uuid;
 	}
@@ -226,7 +230,7 @@ class Item implements \JsonSerializable {
 		//bind the member variable to the place holders in the template
 		//left out date because no date in data
 		$parameters = ["itemId" => $this->itemId->getBytes(),
-			"itemDonationId" => $this->itemDonationId->getBytes() ,
+			"itemDonationId" =>$this->itemDonationId === null ? null : $this->itemDonationId->getBytes() ,
 			"itemRequestId" => $this->itemRequestId->getBytes() ,
 			"itemTrackingNumber" => $this->itemTrackingNumber,
 			"itemUrl" => $this->itemUrl];
@@ -412,7 +416,7 @@ class Item implements \JsonSerializable {
 		$fields = get_object_vars($this);
 
 		$fields["itemId"] = $this->itemId->toString();
-		$fields["itemDonationId"] = $this->itemDonationId->toString();
+		$fields["itemDonationId"] =$this->itemDonationId === null ? null : $this->itemDonationId->toString();
 		$fields["itemRequestId"] = $this->itemRequestId->toString();
 		return($fields);
 	}

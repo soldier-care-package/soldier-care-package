@@ -62,7 +62,7 @@ try {
 			$donations = Donation::getAllDonations($pdo)->toArray();
 			$donationProfiles = [];
 			foreach($donations as $donation){
-				$profile = 	Profile::getProfileByProfileId($pdo, $donation->getDonationProfileId());
+				$profile = 	Profile::getProfileByProfileId($pdo, $donation->getDonationProfileId()->toString());
 				$donationProfiles[] = (object)[
 					"donationId"=>$donation->getDonationId(),
 					"donationProfileId"=>$donation->getDonationProfileId(),
