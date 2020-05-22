@@ -71,6 +71,7 @@ try {
 					"requestContent"=>$request->getRequestContent(),
 					"requestDate"=>$request->getRequestDate()->format("U.u") * 1000,
 					"profileAvatarUrl"=>$profile->getProfileAvatarUrl(),
+					"profileBio"=>$profile->getProfileBio(),
 					//todo need to include all information that i want to pull with all request ex name, username maybe items
 				];
 			}

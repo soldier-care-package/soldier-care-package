@@ -4,15 +4,15 @@ import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import {Route} from "react-router";
 
-export const Request = ({request, Profile}) => {
+export const RequestCard = ({request, profile}) => {
 	return (
 
 		// <Route render={({history}) => (
 			<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
-				<Card.Img variant="top" src="picture-hold.jpg" alt="Profile picture"/>
+				<Card.Img variant="top" src={request.profileAvatarUrl} alt="Profile picture"/>
 				<Card.Body>
 					<Card.Text>
-						{request.requestContent}
+						{request.profileBio}
 					</Card.Text>
 					<Card.Text>
 					<ListGroup>

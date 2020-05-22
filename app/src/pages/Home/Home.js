@@ -1,14 +1,16 @@
 import React, {useEffect} from "react"
-import {Request} from "./Request-home";
+import {RequestCard} from "./Request-home";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllRequests} from "../../shared/actions/request";
 
 
-export const Home = ({Requests}) => {
+export const Home = () => {
 
-	// const {match} =props;
-	const requests = useSelector(state => (state.requests ? state.requests : []));
+	const request = useSelector(state => (state.request ? state.request : []));
 	const dispatch = useDispatch();
+
+	const profile = useSelector(state => (state.profile ? state.profile : []));
+
 
 	 function effects() {
 		dispatch(getAllRequests());
@@ -21,7 +23,7 @@ export const Home = ({Requests}) => {
 		<>
 		<h1>Home</h1>
 			{/*<Request/>*/}
-			{requests.map(request => <Request key={request.requestId} request={request}/>
+			{request.map(request => <RequestCard key={request.requestId} request={request}/>
 			)}
 		</>
 )
