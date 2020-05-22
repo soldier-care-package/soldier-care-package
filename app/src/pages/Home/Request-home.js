@@ -2,16 +2,17 @@ import React from "react"
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import Route from "react-router/modules/Route";
+import {Route} from "react-router";
 
-export const Request = ({Request}) => {
+export const Request = ({request, Profile}) => {
 	return (
-		<Route render={({history}) => (
+
+		// <Route render={({history}) => (
 			<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
 				<Card.Img variant="top" src="picture-hold.jpg" alt="Profile picture"/>
 				<Card.Body>
 					<Card.Text>
-						{Request.requestContent}
+						{request.requestContent}
 					</Card.Text>
 					<Card.Text>
 					<ListGroup>
@@ -24,6 +25,6 @@ export const Request = ({Request}) => {
 						<Button variant="light" size="lg" block>Request Details</Button>
 				</Card.Body>
 			</Card>
-		)}/>
+		// )}/>
 	)
 };
