@@ -2,8 +2,18 @@ import React from "react"
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllRequests} from "../../shared/actions/request";
 
-export const Request = () => {
+export const Request = (props) => {
+	const {match} =props;
+	const request = useSelector(state => (state.request));
+
+	const dispatch = useDispatch();
+	const effects = () => {
+		dispatch(getAllRequests(match.params.));
+	}
+
 	return (
 		<>
 			<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>

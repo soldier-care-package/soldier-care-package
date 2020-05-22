@@ -8,19 +8,25 @@ import {FourOhFour} from "./pages/FourOhFour/FourOhFour";
 import {SoldierOpen} from "./pages/SoldierOpenRequest/SoldierOpen";
 import {SoldierHistory} from "./pages/SoldierHistory/SoldierHistory";
 import {Navigation} from "./shared/components/main-nav/Navigation";
+import {applyMiddleware, createStore} from "redux";
+import Provider from "react-redux/lib/components/Provider";
+import thunk from "redux-thunk";
 
+const store = createStore( applyMiddleware(thunk));
 
-const Routing = () => (
+const Routing = (store) => (
 	<>
-		<Navigation/>
-	<BrowserRouter>
-	<Switch>
-	<Route exact path="/Home" component={Home}/>
-	<Route exact path="/SoldierOpen" component={SoldierOpen}/>
-	<Route exact path="/SoldierHistory" component={SoldierHistory}/>
-	<Route component={FourOhFour}/>
-	</Switch>
-	</BrowserRouter>
+		<Provider store={store}>
+			<Navigation/>
+				<BrowserRouter>
+					<Switch>
+						<Route exact path="/Home" component={Home}/>
+						<Route exact path="/SoldierOpen" component={SoldierOpen}/>
+						<Route exact path="/SoldierHistory" component={SoldierHistory}/>
+						<Route component={FourOhFour}/>
+					</Switch>
+				</BrowserRouter>
+		</Provider>
 	</>
 );
 ReactDOM.render(<Routing/>, document.querySelector('#root'));
