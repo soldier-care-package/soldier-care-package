@@ -11,8 +11,9 @@ import {Navigation} from "./shared/components/main-nav/Navigation";
 import {applyMiddleware, createStore} from "redux";
 import Provider from "react-redux/lib/components/Provider";
 import thunk from "redux-thunk";
+import reducers from "./shared/reducers/reducer";
 
-const store = createStore( applyMiddleware(thunk));
+const store = createStore(reducers, applyMiddleware(thunk));
 
 const Routing = (store) => (
 	<>
@@ -29,4 +30,4 @@ const Routing = (store) => (
 		</Provider>
 	</>
 );
-ReactDOM.render(<Routing/>, document.querySelector('#root'));
+ReactDOM.render(Routing(store), document.querySelector('#root'));
