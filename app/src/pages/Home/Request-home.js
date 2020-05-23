@@ -9,7 +9,7 @@ import Row from "react-bootstrap/Row";
 
 export const RequestCard = ({request, profile}) => {
 	return (
-
+		<CardDeck className="m-3">
 				<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
 					<Card.Img variant="top" src={request.profileAvatarUrl} alt="Profile picture"/>
 					<Card.Body>
@@ -30,6 +30,7 @@ export const RequestCard = ({request, profile}) => {
 							<Button variant="light" size="lg" block>Request Details</Button>
 					</Card.Body>
 				</Card>
+		</CardDeck>
 
 
 	)

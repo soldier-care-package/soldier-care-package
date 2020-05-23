@@ -31,13 +31,12 @@ export const Home = () => {
 			</Row>
 		</Container>
 			{/*<Request/>*/}
-			<Container>
-				<Row className="justify-content-center">
+			<Container className="flex-direction-reverse">
+				<Row className="justify-content-lg-center">
 
-					<CardDeck>
+
 			{request.map(request => <RequestCard key={request.requestId} request={request}/>
 			)}
-					</CardDeck>
 
 				</Row>
 			</Container>
