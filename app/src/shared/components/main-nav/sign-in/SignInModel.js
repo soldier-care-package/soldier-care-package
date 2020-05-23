@@ -23,14 +23,14 @@ export const SignInModal = () => {
 				<Modal.Body>
 					<SignInForm/>
 				</Modal.Body>
-				<Modal.Footer>
-					<Button variant="secondary" onClick={handleClose}>
-						Close
-					</Button>
-					<Button variant="primary" onClick={handleClose}>
-						Save Changes
-					</Button>
-				</Modal.Footer>
+				{/*<Modal.Footer>*/}
+				{/*	<Button variant="secondary" onClick={handleClose}>*/}
+				{/*		Close*/}
+				{/*	</Button>*/}
+				{/*	<Button variant="primary" onClick={handleClose}>*/}
+				{/*		Save Changes*/}
+				{/*	</Button>*/}
+				{/*</Modal.Footer>*/}
 			</Modal>
 		</>
 	);
