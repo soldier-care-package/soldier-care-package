@@ -13,7 +13,8 @@ export const SignUpFormContent = (props) => {
 		handleChange,
 		handleBlur,
 		handleSubmit,
-		handleReset
+		handleReset,
+		handleClose
 	} = props;
 	return (
 		<>
@@ -179,7 +180,11 @@ export const SignUpFormContent = (props) => {
 
 
 				<div className="form-group">
-					<button className="btn btn-primary mb-2 m-1" type="submit">Submit</button>
+					<button className="btn btn-primary mb-2 m-1"
+							  onSubmit={handleSubmit}
+							  disabled={isSubmitting}
+							  type="submit">Submit {isSubmitting ? "Registering ..." : "Register"}
+					</button>
 					<button
 						className="btn btn-danger mb-2 m-1"
 						onClick={handleReset}
