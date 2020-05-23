@@ -2,6 +2,10 @@ import React, {useEffect} from "react"
 import {RequestCard} from "./Request-home";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllRequests} from "../../shared/actions/request";
+import Row from "react-bootstrap/Row";
+import CardDeck from "react-bootstrap/CardDeck";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
 
 
 export const Home = () => {
@@ -21,10 +25,22 @@ export const Home = () => {
 
 	return (
 		<>
-		<h1>Home</h1>
+		<Container>
+			<Row className="justify-content-center m-4">
+		<h1>All Open Request</h1>
+			</Row>
+		</Container>
 			{/*<Request/>*/}
+			<Container>
+				<Row className="justify-content-center">
+
+					<CardDeck>
 			{request.map(request => <RequestCard key={request.requestId} request={request}/>
 			)}
+					</CardDeck>
+
+				</Row>
+			</Container>
 		</>
 )
 };
