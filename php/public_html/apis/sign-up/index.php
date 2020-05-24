@@ -165,7 +165,7 @@ EOF;
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating a profile with SCP";
+		$reply->message = "Thank you for creating a profile with SCP. Please check your email to activate your account.";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}

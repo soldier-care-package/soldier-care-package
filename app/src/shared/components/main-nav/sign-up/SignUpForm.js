@@ -2,12 +2,10 @@ import React, {useState} from 'react';
 import {httpConfig} from "../../../utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik";
-import {useHistory} from "react-router-dom";
 
 import {SignUpFormContent} from "./SignUpFormContent";
 
 export const SignUpForm = ({handleClose}) => {
-	const history = useHistory();
 	const signUp = {
 		profileName:"",
 		profileUsername: "",
@@ -44,7 +42,8 @@ export const SignUpForm = ({handleClose}) => {
 
 					if(reply.status === 200) {
 						resetForm();
-						// history.push("/sign-up-successful")
+						alert(message);
+						handleClose();
 					} setStatus({message, type});
 				}
 			);

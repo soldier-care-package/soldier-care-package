@@ -1,16 +1,18 @@
 import React from "react"
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
-import {Route} from "react-router";
 import CardDeck from "react-bootstrap/CardDeck";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import {Route} from "react-router";
+
 
 export const RequestCard = ({request, profile}) => {
+
+
+
 	return (
-		<CardDeck className="m-3">
-				<Card bg="primary" text="white"  border="dark" style={{ width: '25rem' }}>
+		<Route render={({history})=>(
+				<Card bg="primary" text="white"  border="dark" style={{ width: '25rem', margin:"10px"}}>
 					<Card.Img variant="top" src={request.profileAvatarUrl} alt="Profile picture"/>
 					<Card.Body>
 						<Card.Text>
@@ -27,11 +29,15 @@ export const RequestCard = ({request, profile}) => {
 						{/*	<ListGroup.Item variant="secondary">Item</ListGroup.Item>*/}
 						{/*</ListGroup>*/}
 						{/*</Card.Text>*/}
-							<Button variant="light" size="lg" block>Request Details</Button>
-					</Card.Body>
-				</Card>
-		</CardDeck>
 
+					</Card.Body>
+					<Card.Footer>
+					<Button variant="light" size="lg" block
+							  onClick={() => {history.push(`request/${request.requestId}`)}}
+							  >Request Details</Button>
+					</Card.Footer>
+				</Card>
+		)}/>
 
 	)
 };

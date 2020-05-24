@@ -1,8 +1,8 @@
 
 import {httpConfig} from "../utils/http-config";
 
-export const getRequestByRequestId = () => async (dispatch) => {
-	const {data} =  await httpConfig.get("/apis/request/");
+export const getRequestByRequestId = (id) => async (dispatch) => {
+	const {data} =  await httpConfig.get(`/apis/request/${id}`);
 	dispatch({type: "GET_REQUEST_BY_REQUEST_ID", payload : data })
 };
 
