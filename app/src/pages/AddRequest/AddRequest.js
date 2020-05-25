@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-export const AddRequest = ({request, item}) => {
+export const AddRequest = ({profile, request, item}) => {
 	return (
 		<>
 
