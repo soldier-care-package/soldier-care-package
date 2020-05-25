@@ -1,6 +1,8 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {FormDebugger} from "../../FormDebugger";
 import React from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faKey, faEnvelope,faFlagUsa, faUser, faDove} from "@fortawesome/free-solid-svg-icons";
+import {FormDebugger} from "../../FormDebugger";
+
 
 export const SignUpFormContent = (props) => {
 	const {
@@ -25,7 +27,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="dove"/>
+								<FontAwesomeIcon icon={faFlagUsa}/>
 							</div>
 						</div>
 						<input
@@ -53,7 +55,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="dove"/>
+								<FontAwesomeIcon icon={faUser}/>
 							</div>
 						</div>
 						<input
@@ -81,7 +83,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="dove"/>
+								<FontAwesomeIcon icon={faDove}/>
 							</div>
 						</div>
 						<input
@@ -108,7 +110,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="envelope"/>
+								<FontAwesomeIcon icon={faEnvelope}/>
 							</div>
 						</div>
 						<input
@@ -137,7 +139,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="key"/>
+								<FontAwesomeIcon icon={faKey}/>
 							</div>
 						</div>
 						<input
@@ -159,7 +161,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
-								<FontAwesomeIcon icon="key"/>
+								<FontAwesomeIcon icon={faKey}/>
 							</div>
 						</div>
 						<input
@@ -192,9 +194,7 @@ export const SignUpFormContent = (props) => {
 					>Reset
 					</button>
 				</div>
-
-
-				<FormDebugger {...props} />
+				{/*<FormDebugger {...props} />*/}
 			</form>
 			{
 				submitStatus && (<div className={submitStatus.type}>{submitStatus.message}</div>)

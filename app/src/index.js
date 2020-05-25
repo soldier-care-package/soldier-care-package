@@ -13,6 +13,7 @@ import {applyMiddleware, createStore} from "redux";
 import {Provider} from "react-redux";
 import thunk from "redux-thunk";
 import reducers from "./shared/reducers/reducer";
+import {RequestCreate} from "./pages/create/RequestCreate";
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -26,6 +27,7 @@ const Routing = (store) => (
 						<Route exact path="/SoldierOpen" component={SoldierOpen}/>
 						<Route exact path="/SoldierHistory" component={SoldierHistory}/>
 						<Route exact path="/request/:requestId" component={Request} requestId=":requestId"/>
+						<Route exact path="/create/RequestCreate" component={RequestCreate}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>
