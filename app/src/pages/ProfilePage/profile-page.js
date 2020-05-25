@@ -1,11 +1,11 @@
 import React from "react";
-import Card from "react";
-import Container from "react";
-import Form from "react";
-import Button from "react";
-import Col from "react";
-import Row from "react";
-import Image from "react";
+import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
+import Button from "react-bootstrap/Button";
 
 export const ProfilePage = () => {
 	return (
