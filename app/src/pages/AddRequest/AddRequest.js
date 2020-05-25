@@ -1,16 +1,21 @@
 import React from "react";
-import Card from "react";
-import ListGroup from "react";
-import Button from "react";
-import Form from "react";
+import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 
-export const AddRequest = () => {
+export const AddRequest = ({request, item}) => {
 	return (
 		<>
+
+				<Container>
+					<Row>
+						<h1 className="justify-content-center m-5">(Username)</h1>
+					</Row>
+				</Container>
 			<Form>
-				<Card>
-					<Card.Body>(Username)</Card.Body>
-				</Card>
 				<Card>
 				<ListGroup>
 					<ListGroup.Item>Item One</ListGroup.Item>

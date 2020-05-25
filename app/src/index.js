@@ -20,7 +20,7 @@ import {RequestCreate} from "./pages/create/RequestCreate";
 
 import {CreateAccount} from "./pages/CreateAccount/create-account";
 import {ProfilePage} from "./pages/ProfilePage/profile-page";
-import {AddRequest} from "./pages/AddRequest/add-request";
+import {AddRequest} from "./pages/AddRequest/AddRequest";
 import {RequestDetail} from "./pages/RequestDetail/request-detail";
 
 const store = createStore(reducers, applyMiddleware(thunk));
