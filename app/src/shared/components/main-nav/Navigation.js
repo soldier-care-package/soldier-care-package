@@ -10,7 +10,7 @@ export const Navigation = () => {
 			<Navbar bg="primary" variant="dark">
 				<Navbar.Brand href="/" >Home</Navbar.Brand>
 				<Nav className="mr-auto">
-					<Nav.Link href="/AddRequest"> + New Request</Nav.Link>
+					<Nav.Link href="/Create"> + New Request</Nav.Link>
 					<Nav.Link href="/SoldierOpen">My Lists</Nav.Link>
 					<Nav.Link href="/ProfilePage">Profile</Nav.Link>
 					<SignUpModal/>

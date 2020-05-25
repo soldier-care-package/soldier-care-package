@@ -145,13 +145,17 @@ try {
 			validateJwtHeader();
 
 			// create new request and insert into the database
-			$request = new Request(generateUuidV4()->toString(), $_SESSION["profile"]->getProfileId()->toString(),
+			$newRequestId = generateUuidV4()->toString();
+			$request = new Request($newRequestId, $_SESSION["profile"]->getProfileId()->toString(),
 				$requestObject->requestContent, null);
 			$request->insert($pdo);
 
 			// update reply
 			$reply->message = "Request created OK";
+			$reply->data = new stdClass();
+			$reply->data -> requestId = $newRequestId;
 		}
+
 
 	} else if($method === "DELETE") {
 
