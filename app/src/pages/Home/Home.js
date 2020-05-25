@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useEffect} from "react"
 import {RequestCard} from "./RequestCard";
 import {useDispatch, useSelector} from "react-redux";
@@ -5,7 +6,10 @@ import {getAllRequests} from "../../shared/actions/request";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
-
+=======
+import React from "react";
+import {Request} from "./Request-home";
+>>>>>>> profile-apis
 
 export const Home = () => {
 
@@ -39,7 +43,9 @@ export const Home = () => {
 				</Row>
 			</Container>
 		</>
+
 )
 
 };
+
 

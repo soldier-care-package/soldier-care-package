@@ -23,7 +23,6 @@ export const SignInModal = () => {
 				<Modal.Body>
 					<SignInForm handleClose={handleClose}/>
 				</Modal.Body>
-
 			</Modal>
 		</>
 	);
