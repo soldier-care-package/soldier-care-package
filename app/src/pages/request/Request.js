@@ -9,11 +9,11 @@ export const Request = ({match}) => {
 	const sideEffects= () => {
 		dispatch (getRequestByRequestId(match.params.requestId));
 		dispatch(getItemsByItemRequestId(match.params.requestId))
-	}
-	const sideEffectInputs=[match.params.requestId]
+	};
+	const sideEffectInputs=[match.params.requestId];
 	useEffect(sideEffects, sideEffectInputs);
-	const request = useSelector(state=>(state.request ? state.request[0] : null))
-	const items = useSelector(state=>(state.items ? state.items : []))
+	const request = useSelector(state=>(state.request ? state.request[0] : null));
+	const items = useSelector(state=>(state.items ? state.items : []));
 	console.log(request);
 	console.log(items);
 	return (
@@ -21,4 +21,4 @@ export const Request = ({match}) => {
 			<h1>request</h1>
 		</>
 	)
-}
+};
