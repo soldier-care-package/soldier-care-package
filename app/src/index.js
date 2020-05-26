@@ -34,7 +34,7 @@ const Routing = (store) => (
 						<Route exact path="/CreateAccount" component={CreateAccount}/>
 						<Route exact path="/ProfilePage" component={ProfilePage}/>
 						<Route exact path="/AddRequest" component={AddRequest}/>
-						<Route exact path="/RequestDetail" component={RequestDetail}/>
+						<Route exact path="/RequestDetail/:requestId" component={RequestDetail} requestId=":requestId"/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>

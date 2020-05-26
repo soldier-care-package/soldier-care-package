@@ -33,7 +33,7 @@ export const RequestCard = ({request, profile}) => {
 					</Card.Body>
 					<Card.Footer>
 					<Button variant="light" size="lg" block
-							  onClick={() => {history.push(`request/${request.requestId}`)}}
+							  onClick={() => {history.push(`RequestDetail/${request.requestId}`)}}
 							  >Request Details</Button>
 					</Card.Footer>
 				</Card>

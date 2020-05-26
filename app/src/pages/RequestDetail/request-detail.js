@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -7,16 +7,34 @@ import Image from "react-bootstrap/Image";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
+import { getRequestByRequestId } from "../../shared/actions/request";
+import { getItemsByItemRequestId } from "../../shared/actions/item";
+import {useDispatch, useSelector} from "react-redux"
 
 
-export const RequestDetail = () => {
+export const RequestDetail = (props) => {
+
+	const {match} = props;
+	const item = useSelector(state => (state.item ? state.item : []));
+
+	const filterItem = item.map(item => item.itemUrl);
+
+	const items = filterItem, dispatch = useDispatch();
+	const effects = () => {
+		dispatch(getItemsByItemRequestId(match.params.requestId));
+	};
+
+	const inputs = [match.params.requestId];
+	useEffect(effects, inputs);
+
 	return (
 		<>
 			<Form>
+				<h1></h1>
 				<Container>
 					<Row>
 						<Col xs={6} md={4}>
-							<Image src="holder.js/171x180" roundedCircle />
+							<Image src=" " roundedCircle />
 						</Col>
 					</Row>
 					<Card>
@@ -41,10 +59,7 @@ export const RequestDetail = () => {
 					</Card>
 					<Card>
 						<ListGroup>
-							<ListGroup.Item>Item One</ListGroup.Item>
-							<ListGroup.Item variant="primary">Item Two</ListGroup.Item>
-							<ListGroup.Item>Item Three</ListGroup.Item>
-							<ListGroup.Item variant="primary">Item Four</ListGroup.Item>
+							{items.map(item => <ListGroup.Item><a href={item}>{item}</a></ListGroup.Item>)}
 						</ListGroup>
 						<Button variant="outline-primary">Accept Whole List</Button>{' '}
 					</Card>
