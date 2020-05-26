@@ -8,7 +8,7 @@ export const SoldierHistory = () => {
 	return (
 		<>
 			<Container>
-			<h1>Soldier Username Fulfilled Request History</h1>
+			<h1>Soldier Fulfilled Request History</h1>
 			</Container>
 					<div className="mb-2 p-4">
 						<Button className="m-2" variant="secondary" size="lg">

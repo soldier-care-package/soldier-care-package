@@ -23,11 +23,6 @@ export const RequestContent = (props) => {
 	return (
 		<>
 
-				<Container>
-					<Row>
-						<h1 className="justify-content-center m-5">(Username)</h1>
-					</Row>
-				</Container>
 
 			<form onSubmit={handleSubmit}>
 				{/*controlId must match what is passed to the initialValues prop*/}

@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import {Route} from "react-router";
 
 
-export const RequestCard = ({request, profile}) => {
+export const RequestCard = ({request}) => {
 
 
 
