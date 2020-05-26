@@ -13,7 +13,9 @@ export const RequestCard = ({request}) => {
 	return (
 		<Route render={({history})=>(
 				<Card bg="primary" text="white"  border="dark" style={{ width: '25rem', margin:"10px"}}>
-					<Card.Img variant="top" src={request.profileAvatarUrl} alt="Profile picture"/>
+					<Card.Img variant="top" src=""  alt="Profile picture"/>
+						{/*{request.profileAvatarUrl} */}
+
 					<Card.Body>
 						<Card.Text>
 							{request.profileBio}

@@ -1,4 +1,5 @@
 import React from 'react';
+import {UseJwt, UseJwtProfileUsername} from "../../shared/utils/jwt-helpers";
 import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
 import {RequestContent} from "./RequestContent"
@@ -7,6 +8,10 @@ import {httpConfig} from "../../shared/utils/http-config.js";
 
 
 export const RequestForm = () => {
+
+	const jwt = UseJwt();
+	const profileUsername = UseJwtProfileUsername();
+
 	const validator = Yup.object().shape({
 		requestContent: Yup.string()
 			.required("request Content is required"),
@@ -78,6 +83,9 @@ const requestValue= {"requestContent": values.requestContent}
 
 	return (
 		<>
+			{ jwt !== null && (
+				<h1 className="display-4">Create a New Request<br/> {profileUsername}</h1>
+			)}
 			<Formik
 				initialValues={item}
 				onSubmit={submitItem}

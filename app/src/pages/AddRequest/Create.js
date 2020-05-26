@@ -10,9 +10,7 @@ import {RequestForm} from "./RequestForm";
 export const Create = () => {
 	return (
 		<>
-			<Container>
-				<h1 className="m-5">Create a New Request</h1>
-			</Container>
+
 			<Container>
 				<RequestForm/>
 			</Container>
