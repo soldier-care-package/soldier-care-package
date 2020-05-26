@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Cohort28SCP\SoldierCarePackage\{Request, Donation, Item};
+use Cohort28SCP\SoldierCarePackage\{Item, Request};
 
 
 /**

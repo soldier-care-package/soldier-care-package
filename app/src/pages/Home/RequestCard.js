@@ -8,8 +8,6 @@ import {Route} from "react-router";
 
 export const RequestCard = ({request}) => {
 
-
-
 	return (
 		<Route render={({history})=>(
 				<Card bg="primary" text="white"  border="dark" style={{ width: '25rem', margin:"10px"}}>
