@@ -9,10 +9,16 @@ export const SignUpForm = ({handleClose}) => {
 	const signUp = {
 		profileName:"",
 		profileUsername: "",
+		profileAddress: "",
+		profileCity: "",
+		profileRank: "",
+		profileState: "",
+		profileZip: "",
 		profileType:"",
 		profileEmail: "",
 		profilePassword: "",
 		profilePasswordConfirm: "",
+
 	};
 
 	const [status, setStatus] = useState(null);
@@ -21,6 +27,12 @@ export const SignUpForm = ({handleClose}) => {
 			.required("Profile name is required"),
 		profileUsername: Yup.string()
 			.required("Profile username is required"),
+		profileBio: Yup.string(),
+		profileAddress: Yup.string(),
+		profileCity: Yup.string(),
+		profileRank: Yup.string(),
+		profileState: Yup.string(),
+		profileZip: Yup.string(),
 		profileType: Yup.string()
 			.required("Profile type is required"),
 		profileEmail: Yup.string()

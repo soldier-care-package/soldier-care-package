@@ -78,6 +78,183 @@ export const SignUpFormContent = (props) => {
 					}
 				</div>
 
+				{/*Profile Bio*/}
+				<div className="form-group">
+					<label htmlFor="profileBio">Bio</label>
+					<div className="input-group">
+						<div className="input-group-prepend">
+							<div className="input-group-text">
+								<FontAwesomeIcon icon={faUser}/>
+							</div>
+						</div>
+						<input
+							className="form-control"
+							id="profileBio"
+							type="text"
+							value={values.profileBio}
+							placeholder="Bio"
+							onChange={handleChange}
+							onBlur={handleBlur}
+
+						/>
+					</div>
+					{
+						errors.profileBio && touched.profileBio && (
+							<div className="alert alert-danger">
+								{errors.profileBio}
+							</div>
+						)
+					}
+				</div>
+
+				{/*Profile Address*/}
+
+				<div className="form-group">
+					<label htmlFor="profileAddress">Address</label>
+					<div className="input-group">
+						<div className="input-group-prepend">
+							<div className="input-group-text">
+								<FontAwesomeIcon icon={faUser}/>
+							</div>
+						</div>
+						<input
+							className="form-control"
+							id="profileAddress"
+							type="text"
+							value={values.profileAddress}
+							placeholder="Mailing Address"
+							onChange={handleChange}
+							onBlur={handleBlur}
+
+						/>
+					</div>
+					{
+						errors.profileAddress && touched.profileAddress && (
+							<div className="alert alert-danger">
+								{errors.profileAddress}
+							</div>
+						)
+					}
+
+{/*Profile City*/}
+
+					<div className="form-group">
+						<label htmlFor="profileCity">City</label>
+						<div className="input-group">
+							<div className="input-group-prepend">
+								<div className="input-group-text">
+									<FontAwesomeIcon icon={faUser}/>
+								</div>
+							</div>
+							<input
+								className="form-control"
+								id="profileCity"
+								type="text"
+								value={values.profileCity}
+								placeholder="City"
+								onChange={handleChange}
+								onBlur={handleBlur}
+
+							/>
+						</div>
+						{
+							errors.profileCity && touched.profileCity && (
+								<div className="alert alert-danger">
+									{errors.profileCity}
+								</div>
+							)
+						}
+					</div>
+
+{/*Profile State*/}
+					<div className="form-group">
+						<label htmlFor="profileState">State</label>
+						<div className="input-group">
+							<div className="input-group-prepend">
+								<div className="input-group-text">
+									<FontAwesomeIcon icon={faUser}/>
+								</div>
+							</div>
+							<input
+								className="form-control"
+								id="profileState"
+								type="text"
+								value={values.profileState}
+								placeholder="State"
+								onChange={handleChange}
+								onBlur={handleBlur}
+
+							/>
+						</div>
+						{
+							errors.profileState && touched.profileState && (
+								<div className="alert alert-danger">
+									{errors.profileState}
+								</div>
+							)
+						}
+					</div>
+
+					{/*Profile Zip*/}
+					<div className="form-group">
+						<label htmlFor="profileZip">Zip</label>
+						<div className="input-group">
+							<div className="input-group-prepend">
+								<div className="input-group-text">
+									<FontAwesomeIcon icon={faUser}/>
+								</div>
+							</div>
+							<input
+								className="form-control"
+								id="profileZip"
+								type="text"
+								value={values.profileZip}
+								placeholder="Zip"
+								onChange={handleChange}
+								onBlur={handleBlur}
+
+							/>
+						</div>
+						{
+							errors.profileZip && touched.profileZip && (
+								<div className="alert alert-danger">
+									{errors.profileZip}
+								</div>
+							)
+						}
+					</div>
+
+					{/*Profile Rank*/}
+					<div className="form-group">
+						<label htmlFor="profileRank">Rank</label>
+						<div className="input-group">
+							<div className="input-group-prepend">
+								<div className="input-group-text">
+									<FontAwesomeIcon icon={faUser}/>
+								</div>
+							</div>
+							<input
+								className="form-control"
+								id="profileRank"
+								type="text"
+								value={values.profileRank}
+								placeholder="Rank"
+								onChange={handleChange}
+								onBlur={handleBlur}
+
+							/>
+						</div>
+						{
+							errors.profileRank && touched.profileRank && (
+								<div className="alert alert-danger">
+									{errors.profileRank}
+								</div>
+							)
+						}
+					</div>
+
+					{/*Profile Type*/}
+				</div>
 				<div className="form-group">
 					<label htmlFor="profileType">Type</label>
 					<div className="input-group">
@@ -105,6 +282,7 @@ export const SignUpFormContent = (props) => {
 						)
 					}
 				</div>
+
 				<div className="form-group">
 					<label htmlFor="profileEmail">Email Address</label>
 					<div className="input-group">
@@ -194,7 +372,7 @@ export const SignUpFormContent = (props) => {
 					>Reset
 					</button>
 				</div>
-				{/*<FormDebugger {...props} />*/}
+				<FormDebugger {...props} />
 			</form>
 			{
 				submitStatus && (<div className={submitStatus.type}>{submitStatus.message}</div>)
