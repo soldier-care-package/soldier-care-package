@@ -1,5 +1,9 @@
 ALTER DATABASE CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+# DROP TABLE IF EXISTS item;
+# DROP TABLE IF EXISTS donation;
+# DROP TABLE IF EXISTS request;
+# DROP TABLE IF EXISTS profile;
 
 CREATE TABLE profile(
 	profileId BINARY(16) NOT NULL,

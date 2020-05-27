@@ -9,6 +9,7 @@ export const SignUpForm = ({handleClose}) => {
 	const signUp = {
 		profileName:"",
 		profileUsername: "",
+		profileBio: "",
 		profileAddress: "",
 		profileCity: "",
 		profileRank: "",
