@@ -35,7 +35,7 @@ export const RequestDetail = (props) => {
 				<Container >
 					<Row>
 						<Col xs={6} md={4}>
-							<Image src=" " roundedCircle />
+							<Image src="https://picsum.photos/200/200" roundedCircle />
 						</Col>
 					</Row>
 					<Card>
