@@ -18,10 +18,7 @@ export const ProfilePage = () => {
 					<Row>
 						<h1 className="justify-content-center m-5">(Profile Type)</h1>
 					</Row>
-				{/*<Card>*/}
-				{/*	<Card.Body>(Username)</Card.Body>*/}
-				{/*	<Card.Body>(Profile Type)</Card.Body>*/}
-				{/*</Card>*/}
+
 					<Row>
 						<Col xs={6} md={4}>
 							<Image src="https://picsum.photos/200/200" roundedCircle />

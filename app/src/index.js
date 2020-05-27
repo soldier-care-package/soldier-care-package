@@ -7,7 +7,6 @@ import {Home} from "./pages/Home/Home";
 import {FourOhFour} from "./pages/FourOhFour/FourOhFour";
 import {SoldierOpen} from "./pages/SoldierOpenRequest/SoldierOpen";
 import {SoldierHistory} from "./pages/SoldierHistory/SoldierHistory";
-import {Request} from "./pages/request/Request"
 import {Navigation} from "./shared/components/main-nav/Navigation";
 import {applyMiddleware, createStore} from "redux";
 import {Provider} from "react-redux";
@@ -34,6 +33,7 @@ const Routing = (store) => (
 						<Route exact path="/ProfilePage" component={ProfilePage}/>
 						<Route exact path="/Create" component={Create}/>
 						<Route exact path="/RequestDetail" component={RequestDetail}/>
+
 						<Route exact path="/RequestDetail/:requestId" component={RequestDetail} requestId=":requestId"/>
 						<Route component={FourOhFour}/>
 					</Switch>

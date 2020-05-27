@@ -18,7 +18,7 @@ export const RequestContent = (props) => {
 
 
 			<form onSubmit={handleSubmit}>
-				{/*controlId must match what is passed to the initialValues prop*/}
+{/*controlId must match what is passed to the initialValues prop*/}
 {/*Request Content*/}
 				<div className="form-group">
 					<label htmlFor="requestContent">Request Content</label>

@@ -106,7 +106,6 @@ export const SignUpFormContent = (props) => {
 						)
 					}
 				</div>
-
 				{/*Profile Address*/}
 
 				<div className="form-group">
