@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -16,7 +16,9 @@ export const RequestDetail = (props) => {
 
 	const {match} = props;
 	const item = useSelector(state => (state.item ? state.item : []));
-
+	const profile =useSelector(state => (state.profile));
+	// const [profile, setProfile] =useState(state.profile);
+	console.log(profile)
 	const filterItem = item.map(item => item.itemUrl);
 
 	const items = filterItem, dispatch = useDispatch();
@@ -29,9 +31,9 @@ export const RequestDetail = (props) => {
 
 	return (
 		<>
-			<Form>
-				<h1></h1>
-				<Container>
+			<Form className="m-5">
+				<h1 className="m-4">Request Details</h1>
+				<Container >
 					<Row>
 						<Col xs={6} md={4}>
 							<Image src=" " roundedCircle />
@@ -53,12 +55,13 @@ export const RequestDetail = (props) => {
 					</Card>
 					<Card>
 						<Form.Group controlId="exampleForm.ControlTextarea1">
-							<Form.Label>Bio</Form.Label>
-							<Form.Control as="Bio" rows="3" />
+							<h2 className="m-4">Bio</h2>
+							<Form.Control as="Bio" rows="6" />
 						</Form.Group>
 					</Card>
 					<Card>
-						<ListGroup>
+						<ListGroup className="m-4">
+							<h2 className="m-2">Items</h2>
 							{items.map(item => <ListGroup.Item><a href={item}>{item}</a></ListGroup.Item>)}
 						</ListGroup>
 						<Button variant="outline-primary">Accept Whole List</Button>{' '}

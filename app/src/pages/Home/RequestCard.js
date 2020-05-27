@@ -16,9 +16,11 @@ export const RequestCard = ({request}) => {
 
 					<Card.Body>
 						<Card.Text>
+							<h3>Profile Bio</h3>
 							{request.profileBio}
 						</Card.Text>
 						<Card.Text>
+							<h3>Request Details</h3>
 							{request.requestContent}
 						</Card.Text>
 						{/*<Card.Text>*/}
