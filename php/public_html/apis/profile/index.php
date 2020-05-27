@@ -46,6 +46,7 @@ try{
 
 		// Get a post by content
 		if(empty($id) === false) {
+
 			$reply->data = Profile::getProfileByProfileId($pdo, $id);
 			//todo make function to getProfileByProfileUsername function
 //		} else if(empty($profileUsername) === false) {
