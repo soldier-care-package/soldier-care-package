@@ -27,18 +27,17 @@ export const ProfilePage = (props) => {
 		<>
 			<Form>
 				<Container>
-					<Row>
-						<h1 className="justify-content-center m-5">(Username)</h1>
-					</Row>
-					<Row>
-						<h1 className="justify-content-center m-5">(Profile Type)</h1>
-					</Row>
-
-					<Row>
-						<Col xs={6} md={4}>
-							<Image src="https://picsum.photos/200/200" roundedCircle />
-						</Col>
-					</Row>
+					<Container>
+						<Row className="justify-content-center m-4">
+							<Col>
+								<Image src="https://picsum.photos/200/200" roundedCircle />
+							</Col>
+							<Col className="m-5">
+								<h1>Username: LillyP</h1>
+								<h1>ProfileType: Soldier</h1>
+							</Col>
+						</Row>
+					</Container>
 				</Container>
 				<Container>
 					<Form.Group controlId="exampleForm.ControlTextarea1">
@@ -48,56 +47,56 @@ export const ProfilePage = (props) => {
 				</Container>
 				<Container>
 					<Row>
-						<Button variant="outline-primary" size="lg" disabled>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 							First Name
-						</Button>{' '}
-						<Card>
+						</Button>
+						<Card className="m-3">
 							<Card.Body>Lily</Card.Body>
 						</Card>
 					</Row>
 				</Container>
 				<Container>
 					<Row>
-						<Button variant="outline-primary" size="lg" disabled>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 							Last Name
-						</Button>{' '}
-						<Card>
+						</Button>
+						<Card className="m-3">
 							<Card.Body>Poblano</Card.Body>
 						</Card>
 					</Row>
 				</Container>
 				<Container>
 					<Row>
-						<Button variant="outline-primary" size="lg" disabled>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 							Mailing Address
-						</Button>{' '}
-						<Card>
-							<Card.Body>PFC John Smith. PSC 1234, Box 12345. APO AE 09204-1234</Card.Body>
+						</Button>
+						<Card className="m-3">
+							<Card.Body>Unit and Box APO, AA, 87110</Card.Body>
 						</Card>
 					</Row>
 				</Container>
 				<Container>
 					<Row>
-						<Button variant="outline-primary" size="lg" disabled>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 							Email
-						</Button>{' '}
-						<Card>
-							<Card.Body>ProfileEmail@google.com</Card.Body>
+						</Button>
+						<Card className="m-3">
+							<Card.Body>TestLillyP@gmail.com</Card.Body>
 						</Card>
 					</Row>
 				</Container>
 				<Container>
 					<Row>
-						<Button variant="outline-primary" size="lg" disabled>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 							Password
-						</Button>{' '}
-						<Button variant="outline-primary" size="lg" disabled>
+						</Button>
+						<Button className="m-3" variant="outline-primary" size="lg" disabled>
 								*************
-						</Button>{' '}
+						</Button>
 					</Row>
 				</Container>
-				<Container>
-					<Row>
+				<Container >
+					<Row className="m-5 justify-content-center">
 						<Button variant="outline-primary">Edit Profile</Button>{' '}
 					</Row>
 				</Container>

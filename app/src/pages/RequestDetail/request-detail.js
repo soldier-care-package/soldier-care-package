@@ -31,7 +31,12 @@ export const RequestDetail = (props) => {
 	return (
 		<>
 			<Form className="m-5">
-				<h1 className="m-4">Request Details</h1>
+				<Container>
+					<Row className="justify-content-center m-4">
+						<h1>Request Details</h1>
+					</Row>
+				</Container>
+
 				<Container >
 					<Row>
 						<Col xs={6} md={4}>
@@ -39,28 +44,30 @@ export const RequestDetail = (props) => {
 						</Col>
 					</Row>
 					<Card>
-						<Button variant="outline-primary" size="lg" disabled>
-							{profile.profileUsername}
+						<Button className="m-2" variant="outline-primary" size="lg" disabled>
+							Username: {profile.profileUsername}
 						</Button>
-						<Button variant="outline-primary" size="lg" disabled>
-							{profile.profileName}
+						<Button className="m-2" variant="outline-primary" size="lg" disabled>
+							Name: {profile.profileRank} {""} {profile.profileName}
+
 						</Button>
-						<Button variant="outline-primary" size="lg" disabled>
-							{profile.profileAddress}
+						<Button className="m-2" variant="outline-primary" size="lg" disabled>
+							Mailing Address: {profile.profileAddress} {profile.profileCity}, {profile.profileState} {profile.profileZip}
 						</Button>
 					</Card>
 					<Card>
 						<Container>
 							<h2 className="m-4">Bio</h2>
-							<div>{profile.profileBio}</div>
+							<div className="m-4">{profile.profileBio}</div>
 						</Container>
 					</Card>
 					<Card>
+
 						<ListGroup className="m-4">
 							<h2 className="m-2">Items</h2>
 							{items.map(item => <ListGroup.Item key={item.itemId}><a href={item}>{item}</a></ListGroup.Item>)}
 						</ListGroup>
-						<Button variant="outline-primary">Accept Whole List</Button>{' '}
+						<Button className="m-4" variant="outline-primary">Accept Whole List</Button>
 					</Card>
 				</Container>
 			</Form>
