@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -6,8 +6,23 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
+import {useDispatch, useSelector} from "react-redux";
+import {getProfileByProfileId} from "../../shared/actions/profile";
 
-export const ProfilePage = () => {
+
+export const ProfilePage = (props) => {
+	const{match} = props;
+	const profiles = useSelector(state => (state.profile ? state.profile : []));
+	const dispatch = useDispatch();
+	const effects = ()=> {
+		dispatch(getProfileByProfileId(match.params.profileId));
+	};
+
+	const inputs = [match.params.profileId];
+	useEffect(effects, inputs);
+	const filterProfile = profiles.filter(profile => profile.profileId === match.params.profileId);
+	const profile = {...filterProfile[0]};
+
 	return (
 		<>
 			<Form>
