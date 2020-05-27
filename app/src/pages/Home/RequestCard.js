@@ -1,8 +1,6 @@
 import React from "react"
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import CardDeck from "react-bootstrap/CardDeck";
-import Col from "react-bootstrap/Col";
 import {Route} from "react-router";
 
 
@@ -23,15 +21,6 @@ export const RequestCard = ({request}) => {
 							<h3>Request Details</h3>
 							{request.requestContent}
 						</Card.Text>
-						{/*<Card.Text>*/}
-						{/*<ListGroup>*/}
-						{/*	<ListGroup.Item>No style</ListGroup.Item>*/}
-						{/*	<ListGroup.Item variant="secondary">Item</ListGroup.Item>*/}
-						{/*	<ListGroup.Item>Item</ListGroup.Item>*/}
-						{/*	<ListGroup.Item variant="secondary">Item</ListGroup.Item>*/}
-						{/*</ListGroup>*/}
-						{/*</Card.Text>*/}
-
 					</Card.Body>
 					<Card.Footer>
 					<Button variant="light" size="lg" block

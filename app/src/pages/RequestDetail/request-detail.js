@@ -7,7 +7,6 @@ import Image from "react-bootstrap/Image";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import { getRequestByRequestId } from "../../shared/actions/request";
 import { getItemsByItemRequestId } from "../../shared/actions/item";
 import {useDispatch, useSelector} from "react-redux"
 import {getProfileByProfileId} from "../../shared/actions/profile";

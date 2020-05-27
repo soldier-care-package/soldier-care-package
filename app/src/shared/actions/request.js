@@ -7,7 +7,7 @@ export const getRequestByRequestId = (id) => async (dispatch) => {
 };
 
 export const getRequestByProfileId = () => async (dispatch) => {
-	const {data} =  await httpConfig.get("/apis/request/");
+	const {data} =  await httpConfig.get(`/apis/request/`);
 	dispatch({type: "GET_REQUEST_BY_PROFILE_ID", payload : data })
 };
 

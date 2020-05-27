@@ -15,6 +15,7 @@ export const Navigation = () => {
 					<Nav.Link href="/ProfilePage">Profile</Nav.Link>
 					<SignUpModal/>
 					<SignInModal/>
+					<Nav.Link href="">Sign Out</Nav.Link>
 				</Nav>
 			</Navbar>
 		</>

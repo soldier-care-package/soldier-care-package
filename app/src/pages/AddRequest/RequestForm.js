@@ -4,6 +4,8 @@ import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
 import {RequestContent} from "./RequestContent"
 import {httpConfig} from "../../shared/utils/http-config.js";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
 
 
 
@@ -84,7 +86,12 @@ const requestValue= {"requestContent": values.requestContent}
 	return (
 		<>
 			{ jwt !== null && (
-				<h1 className="display-4">Create a New Request<br/> {profileUsername}</h1>
+				<Container>
+					<Row className="justify-content-center m-4">
+						<h1>Create a New Request<br/> {profileUsername}</h1>
+					</Row>
+				</Container>
+
 			)}
 			<Formik
 				initialValues={item}
